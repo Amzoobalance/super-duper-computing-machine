@@ -1,7 +1,155 @@
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
-    Arial, sans-serif;
-  margin: auto;
-  max-width: 38rem;
-  padding: 2rem;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* This file is only for global things like registering fonts */
+
+/* TODO: Add JetBrains Mono as a monospace option */
+/* TODO: Add some serif font as a serif option */
+/* TODO: Add some handwriting font as a handwriting option */
+
+@font-face {
+  font-family: "Jost";
+  src: url("@assets/fonts/jost/jost-thin.ttf") format("ttf");
+  font-weight: 100;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Jost";
+  src: url("@assets/fonts/jost/jost-thin-italic.ttf") format("ttf");
+  font-weight: 100;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Jost";
+  src: url("@assets/fonts/jost/jost-extra-light.ttf") format("ttf");
+  font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Jost";
+  src: url("@assets/fonts/jost/jost-extra-light-italic.ttf") format("ttf");
+  font-weight: 200;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Jost";
+  src: url("@assets/fonts/jost/jost-light.ttf") format("ttf");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Jost";
+  src: url("@assets/fonts/jost/jost-light-italic.ttf") format("ttf");
+  font-weight: 300;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Jost";
+  src: url("@assets/fonts/jost/jost.ttf") format("ttf");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Jost";
+  src: url("@assets/fonts/jost/jost-italic.ttf") format("ttf");
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Jost";
+  src: url("@assets/fonts/jost/jost-medium.ttf") format("ttf");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Jost";
+  src: url("@assets/fonts/jost/jost-medium-italic.ttf") format("ttf");
+  font-weight: 500;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Jost";
+  src: url("@assets/fonts/jost/jost-semibold.ttf") format("ttf");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Jost";
+  src: url("@assets/fonts/jost/jost-semibold-italic.ttf") format("ttf");
+  font-weight: 600;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Jost";
+  src: url("@assets/fonts/jost/jost-bold.ttf") format("ttf");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Jost";
+  src: url("@assets/fonts/jost/jost-bold-italic.ttf") format("ttf");
+  font-weight: 700;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Jost";
+  src: url("@assets/fonts/jost/jost-extra-bold.ttf") format("ttf");
+  font-weight: 800;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Jost";
+  src: url("@assets/fonts/jost/jost-extra-bold-italic.ttf") format("ttf");
+  font-weight: 800;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Jost";
+  src: url("@assets/fonts/jost/jost-black.ttf") format("ttf");
+  font-weight: 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Jost";
+  src: url("@assets/fonts/jost/jost-black-italic.ttf") format("ttf");
+  font-weight: 900;
+  font-style: italic;
+}
+
+* {
+  font-family: Jost, sans-serif;
+}
+
+.gutter {
+  background-repeat: no-repeat;
+  background-position: 50%;
+  @apply bg-neutral-100;
+
+  &.gutter-horizontal {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==");
+    @apply cursor-col-resize;
+  }
+
+  &.gutter-vertical {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=");
+    @apply cursor-row-resize;
+  }
 }
