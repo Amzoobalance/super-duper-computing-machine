@@ -24,7 +24,7 @@ export default function ActivityItem({
   }
 
   return (
-    <button onClick={handleClick}>
+    <button onClick={handleClick} className="activity-bar-button">
       <Icon className={className} title={title} />
     </button>
   )

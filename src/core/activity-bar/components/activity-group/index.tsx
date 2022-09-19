@@ -11,7 +11,7 @@ type Props = {
 
 export default function ActivityGroup({ activities, currentActivity }: Props) {
   return (
-    <div className="flex flex-col space-y-4 items-center">
+    <div className="flex flex-col space-y-4 items-center activity-bar-group">
       {activities.map((activity) => (
         <ActivityBarItem
           key={activity.name}

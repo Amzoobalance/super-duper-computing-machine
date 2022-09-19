@@ -21,5 +21,5 @@ export const useActivityBarItemClass = ({
 
   return `text-xl hover:text-pink-600 transition-colors duration-300 ${
     isCurrentActivity && "text-pink-700"
-  } activity-bar-item`
+  } activity-bar-icon`
 }

@@ -15,6 +15,7 @@
   "parser": "@typescript-eslint/parser",
   "rules": {
     "import/no-unresolved": "off",
-    "import/namespace": "off"
+    "import/namespace": "off",
+    "@typescript-eslint/no-var-requires": "off"
   }
 }
