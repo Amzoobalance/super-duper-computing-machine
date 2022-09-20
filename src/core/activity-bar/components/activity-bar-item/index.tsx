@@ -8,7 +8,10 @@ import { useActivityBarItemClass } from "@core/activity-bar/components/activity-
 
 type Props = Activity & { currentActivityName: string }
 
-export default function ActivityItem({
+/**
+ * Activity bar icon with title and click handler.
+ */
+export default function ActivityBarItem({
   icon,
   name,
   title,
@@ -18,12 +21,8 @@ export default function ActivityItem({
   const className = useActivityBarItemClass({ name, currentActivityName })
   const { t } = useTranslation()
 
-  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault()
-    event.stopPropagation()
-
-    window.ordo.emit("@activity-bar/activity-selected", name)
-  }
+  const handleClick = () =>
+    window.ordo.emit("@activity-bar/select-activity", name)
 
   return (
     <button onClick={handleClick} className="activity-bar-button">

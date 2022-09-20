@@ -1,8 +1,10 @@
-import Either from "@utils/either"
-import { NoOp } from "@utils/no-op"
 import React, { useState } from "react"
 
-export default function NavBar() {
+import Either from "@utils/either"
+
+import NoOp from "@utils/no-op"
+
+export default function CommandBar() {
   const [isShown, setIsShown] = useState(false)
 
   return Either.fromBoolean(isShown).fold(NoOp, () => (

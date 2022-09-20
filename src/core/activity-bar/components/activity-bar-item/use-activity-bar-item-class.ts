@@ -5,6 +5,9 @@ type Props = {
   currentActivityName: string
 }
 
+/**
+ * Extracted class attribute value compilation for the ActivityBarItem
+ */
 export const useActivityBarItemClass = ({
   name,
   currentActivityName,

@@ -1,5 +1,8 @@
 import type { Activity } from "@core/activity-bar/types"
 
+/**
+ * A list of activities natively supported by Ordo.
+ */
 export const topActivities: Activity[] = [
   {
     name: "editor",

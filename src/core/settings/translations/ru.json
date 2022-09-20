@@ -1,0 +1,19 @@
+{
+  "activity.title": "Настройки",
+  "appearance.theme.title": "Тема оформления",
+  "appearance.theme.description": "Темнота - друг молодёжи.",
+  "appearance.language.title": "Язык",
+  "appearance.language.description": "Берегите корни родного языка.",
+  "editor.font-size.title": "Размер шрифта",
+  "editor.font-size.description": "Чем больше, тем крупнее.",
+  "project.personal.select-directory": "Выберите папку, в которой будут храниться ваши личные заметки Ordo",
+  "project.personal.directory.title": "Папка Ordo",
+  "project.personal.directory.description": "Здесь хранятся все ваши личные Ordo файлы. Если изменить место хранения, все они будут перемещены в новое указанное место.",
+  "files.confirm-move.title": "Всегда подтверждать перемещение",
+  "files.confirm-move.description": "Будем всегда спрашивать, уверены ли вы, что хотите сделать то, что хотите сделать.",
+  "files.confirm-delete.title": "Всегда подтверждать удаление",
+  "files.confirm-delete.description": "Будем всегда спрашивать, уверены ли вы, что хотите сделать то, что хотите сделать.",
+  "system": "Системная",
+  "light": "Светлая",
+  "dark": "Тёмная"
+}

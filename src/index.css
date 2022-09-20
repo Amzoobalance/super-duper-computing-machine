@@ -141,7 +141,7 @@
 .gutter {
   background-repeat: no-repeat;
   background-position: 50%;
-  @apply bg-neutral-100;
+  @apply bg-neutral-100 dark:bg-neutral-900;
 
   &.gutter-horizontal {
     background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==");

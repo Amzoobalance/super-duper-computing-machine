@@ -4,7 +4,7 @@ import { createRoot, Root } from "react-dom/client"
 import App from "@core/app"
 
 import "./index.css"
-import "@i18n"
+import "@i18n/index"
 
 const selectContainer = (id: string) =>
   Either.fromNullable(document.querySelector(id))

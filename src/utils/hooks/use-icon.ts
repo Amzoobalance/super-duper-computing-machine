@@ -8,7 +8,8 @@ import * as BsIcons from "react-icons/bs"
 
 import Switch from "@utils/switch"
 import { thunk } from "@utils/thunk"
-import { NoOp } from "@utils/no-op"
+
+import NoOp from "@utils/no-op"
 
 const ALL_ICONS: Record<string, IconType> = {
   ...HiIcons,
