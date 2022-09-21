@@ -1,6 +1,6 @@
 export enum Color {
   NONE = "",
-  GRAY = "neutral",
+  NEUTRAL = "neutral",
   RED = "red",
   PINK = "pink",
   ORANGE = "orange",
@@ -15,7 +15,7 @@ export enum Color {
  */
 export const Colors = [
   Color.NONE,
-  Color.GRAY,
+  Color.NEUTRAL,
   Color.RED,
   Color.PINK,
   Color.ORANGE,

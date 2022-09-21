@@ -1,17 +1,15 @@
+import type { OrdoAction, OrdoActionWithPayload } from "@utils/types"
+
 import Either from "@utils/either"
 import { noOp } from "@utils/no-op"
 
-const functionNotEquals =
-  (receiver1: EventReceiver<any>) => (receiver2: EventReceiver<any>) =>
-    String(receiver1) != String(receiver2)
+const functionNotEquals = (receiver1: EventReceiver<any>) => (receiver2: EventReceiver<any>) =>
+  String(receiver1) != String(receiver2)
 
 const createOrdoEventEmitter = <T extends EventMap>(
   listeners: Record<EventKey<T>, EventReceiver<any>[]>
 ) => ({
-  on: <Key extends EventKey<T>>(
-    eventName: Key,
-    handler: EventReceiver<T[Key]>
-  ) => {
+  on: <Key extends EventKey<T>>(eventName: Key, handler: EventReceiver<T[Key]>) => {
     listeners[eventName] = Either.fromNullable(listeners)
       .chain((listeners) => Either.fromNullable(listeners[eventName]))
       .fold(
@@ -20,10 +18,7 @@ const createOrdoEventEmitter = <T extends EventMap>(
       )
   },
 
-  off: <Key extends EventKey<T>>(
-    eventName: Key,
-    handler: EventReceiver<T[Key]>
-  ) => {
+  off: <Key extends EventKey<T>>(eventName: Key, handler: EventReceiver<T[Key]>) => {
     listeners[eventName] = Either.fromNullable(listeners)
       .chain((listeners) => Either.fromNullable(listeners[eventName]))
       .fold(
@@ -32,10 +27,12 @@ const createOrdoEventEmitter = <T extends EventMap>(
       )
   },
 
-  emit: <Key extends EventKey<T>>(eventName: Key, params: T[Key]) => {
+  emit: (action: OrdoAction | OrdoActionWithPayload) => {
     Either.fromNullable(listeners)
-      .chain((listeners) => Either.fromNullable(listeners[eventName]))
-      .fold(noOp, (listeners) => listeners.forEach((handle) => handle(params)))
+      .chain((listeners) => Either.fromNullable(listeners[action.event]))
+      .fold(noOp, (listeners) =>
+        listeners.forEach((handle) => handle((action as OrdoActionWithPayload).payload))
+      )
   },
 })
 

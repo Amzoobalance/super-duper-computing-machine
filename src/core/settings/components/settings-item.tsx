@@ -8,11 +8,7 @@ import { useSettingInput } from "@core/settings/hooks/use-setting-input"
 /**
  * A configurable application option.
  */
-export default function SettingsItem({
-  schemaKey,
-  schema,
-  value,
-}: SettingsItemProps) {
+export default function SettingsItem({ schemaKey, schema, value, onChange }: SettingsItemProps) {
   const { t } = useTranslation()
 
   const titleTranslationKey = `${schemaKey}.title`
@@ -22,7 +18,7 @@ export default function SettingsItem({
 
   return (
     <div className="settings-item">
-      <label className="flex flex-col space-y-4 md:space-y-0 md:flex-row justify-between md:items-center p-8 lg:px-64 settings-item-label">
+      <label className="flex flex-col space-x-4 space-y-4 md:space-y-0 md:flex-row justify-between md:items-center p-8 lg:px-64 settings-item-label">
         <div className="md:w-3/4">
           <h2 className="text-center md:text-left text-lg font-bold settings-item-title">
             {t(titleTranslationKey)}
@@ -33,7 +29,7 @@ export default function SettingsItem({
         </div>
 
         <div className="md:w-1/4 flex justify-center md:justify-end items-center">
-          <InputComponent value={value} schema={schema} schemaKey={schemaKey} />
+          <InputComponent value={value} schema={schema} schemaKey={schemaKey} onChange={onChange} />
         </div>
       </label>
     </div>

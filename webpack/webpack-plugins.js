@@ -4,7 +4,5 @@ const CopyPlugin = require("copy-webpack-plugin")
 
 module.exports = [
   new ForkTsCheckerWebpackPlugin(),
-  new CopyPlugin({
-    patterns: [{ from: "./src/assets", to: "src/assets" }],
-  }),
+  new CopyPlugin({ patterns: [{ from: "./src/assets", to: "src/assets" }] }),
 ]

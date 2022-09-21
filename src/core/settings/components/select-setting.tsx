@@ -14,19 +14,13 @@ export default function SelectSetting({
   schemaKey,
   value,
   schema,
+  onChange,
 }: SettingsItemProps<"project.personal.directory">) {
   // TODO: Add extension-level `useTranslation` that automatically appends the scope
   const { t } = useTranslation()
 
-  const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    const value = event.target.value
-
-    window.api
-      .emit("@app/set-user-setting", [schemaKey, value])
-      .then(() =>
-        window.ordo.emit("@app/user-settings-updated", [schemaKey, value])
-      )
-  }
+  const handleChange = (event: ChangeEvent<HTMLSelectElement>) =>
+    onChange(schemaKey, event.target.value)
 
   return Either.fromNullable(schema.enum).fold(NoOp, (options) => (
     <select

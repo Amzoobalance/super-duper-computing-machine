@@ -6,16 +6,11 @@ import App from "@core/app"
 import "./index.css"
 import "@i18n/index"
 
-const selectContainer = (id: string) =>
-  Either.fromNullable(document.querySelector(id))
+const selectContainer = (id: string) => Either.fromNullable(document.querySelector(id))
 
-const renderComponent = (element: JSX.Element) => (root: Root) =>
-  root.render(element)
+const renderComponent = (element: JSX.Element) => (root: Root) => root.render(element)
 
 Either.of("#app")
   .chain(selectContainer)
   .map(createRoot)
-  .fold(
-    () => console.error("Could not find application root element"),
-    renderComponent(<App />)
-  )
+  .fold(() => console.error("Could not find application root element"), renderComponent(<App />))

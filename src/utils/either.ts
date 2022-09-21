@@ -5,12 +5,8 @@ const unsafeGet = Symbol("EitherUnsafeGet")
 export interface IEitherStatic {
   readonly isLeft: false
   readonly isRight: false
-  try: <TRight, TLeft extends Error>(
-    thunk: Thunk<TRight>
-  ) => IEither<TRight, TLeft>
-  fromNullable: <TRight>(
-    x: Nullable<TRight>
-  ) => IEither<NonNullable<TRight>, null>
+  try: <TRight, TLeft extends Error>(thunk: Thunk<TRight>) => IEither<TRight, TLeft>
+  fromNullable: <TRight>(x: Nullable<TRight>) => IEither<NonNullable<TRight>, null>
   fromBoolean: (x: boolean) => IEither<true, false>
   right: <TRight, TLeft = TRight>(x: TRight) => IEither<TRight, TLeft>
   left: <TLeft, TRight = TLeft>(x: TLeft) => IEither<TRight, TLeft>
@@ -21,20 +17,14 @@ export interface IEither<TRight, TLeft = TRight> {
   readonly isLeft: boolean
   readonly isRight: boolean
   [unsafeGet]: () => TLeft | TRight
-  equals: <TOtherContext>(
-    other: IEither<TRight | TLeft | TOtherContext>
-  ) => boolean
+  equals: <TOtherContext>(other: IEither<TRight | TLeft | TOtherContext>) => boolean
   swap: () => IEither<TLeft, TRight>
-  map: <TNewRight>(
-    onRight: Unary<TRight, TNewRight>
-  ) => IEither<TNewRight, TLeft>
+  map: <TNewRight>(onRight: Unary<TRight, TNewRight>) => IEither<TNewRight, TLeft>
   bimap: <TNewRight, TNewLeft = TNewRight>(
     onLeft: Unary<TLeft, TNewLeft>,
     onRight: Unary<TRight, TNewRight>
   ) => IEither<TNewRight, TNewLeft>
-  leftMap: <TNewLeft>(
-    onLeft: Unary<TLeft, TNewLeft>
-  ) => IEither<TRight, TNewLeft>
+  leftMap: <TNewLeft>(onLeft: Unary<TLeft, TNewLeft>) => IEither<TRight, TNewLeft>
   chain: <TNewRight, TNewLeft = TNewRight>(
     onRight: (x: TRight) => IEither<TNewRight, TNewLeft>
   ) => IEither<TNewRight, TLeft | TNewLeft>
@@ -51,9 +41,7 @@ export interface IEither<TRight, TLeft = TRight> {
   ) => TNewLeft | TNewRight
 }
 
-export const left = <TLeft, TRight = TLeft>(
-  x: TLeft
-): IEither<TRight, TLeft> => ({
+export const left = <TLeft, TRight = TLeft>(x: TLeft): IEither<TRight, TLeft> => ({
   isLeft: true,
   isRight: false,
   [unsafeGet]: () => x,
@@ -69,9 +57,7 @@ export const left = <TLeft, TRight = TLeft>(
   fold: (onLeft) => onLeft(x),
 })
 
-export const right = <TRight, TLeft = TRight>(
-  x: TRight
-): IEither<TRight, TLeft> => ({
+export const right = <TRight, TLeft = TRight>(x: TRight): IEither<TRight, TLeft> => ({
   isLeft: false,
   isRight: true,
   [unsafeGet]: () => x,
@@ -82,8 +68,7 @@ export const right = <TRight, TLeft = TRight>(
   bimap: (_, onRight) => right(onRight(x)),
   chain: (onRight) => onRight(x),
   leftChain: () => right(x),
-  ap: (other) =>
-    other.isRight ? (right(other[unsafeGet]()(x)) as any) : right(x),
+  ap: (other) => (other.isRight ? (right(other[unsafeGet]()(x)) as any) : right(x)),
   getOrElse: () => x as any,
   fold: (_, onRight) => onRight(x),
 })
@@ -100,8 +85,7 @@ const Either: IEitherStatic = {
   },
   fromNullable: (x) => (x != null ? right(x) : left(null)) as any,
   fromBoolean: (x) => (x === true ? right(x) : left(x)),
-  right: <TRight, TLeft = unknown>(x: TRight) =>
-    right(x) as IEither<TRight, TLeft>,
+  right: <TRight, TLeft = unknown>(x: TRight) => right(x) as IEither<TRight, TLeft>,
   left: (x) => left(x),
   of: (x) => right(x),
 }

@@ -2,10 +2,11 @@ import type { Activity } from "@core/activity-bar/types"
 
 /**
  * A list of activities natively supported by Ordo.
+ * 3rd party activities also go here.
  */
 export const topActivities: Activity[] = [
   {
-    name: "editor",
+    id: "editor",
     title: "ordo.activity.editor.title",
     icon: "BsLayoutTextWindow",
   },
@@ -36,11 +37,14 @@ export const topActivities: Activity[] = [
   // },
 ]
 
+/**
+ * A list of static activities that cannot be extended externally.
+ */
 export const bottomActivities: Activity[] = [
   {
     icon: "BsBell",
     title: "ordo.activity.notifications.title",
-    name: "notifications",
+    id: "notifications",
   },
   // {
   //   icon: "BsPerson",
@@ -60,6 +64,6 @@ export const bottomActivities: Activity[] = [
   {
     icon: "FaCogs",
     title: "ordo.activity.settings.title",
-    name: "settings",
+    id: "settings",
   },
 ]

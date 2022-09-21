@@ -18,20 +18,8 @@ export const USER_SETTINGS_SCHEMA: Schema<UserSettings> = {
     enum: [Language.ENGLISH, Language.RUSSIAN],
     default: Language.ENGLISH,
   },
-  "editor.font-size": {
-    type: "number",
-    default: 16,
-  },
-  "project.personal.directory": {
-    type: "string",
-    default: "",
-  },
-  "files.confirm-move": {
-    type: "boolean",
-    default: true,
-  },
-  "files.confirm-delete": {
-    type: "boolean",
-    default: true,
-  },
+  "editor.font-size": { type: "number", default: 16, minimum: 8, maximum: 20 },
+  "project.personal.directory": { type: "string", default: "" },
+  "files.confirm-move": { type: "boolean", default: true },
+  "files.confirm-delete": { type: "boolean", default: true },
 }

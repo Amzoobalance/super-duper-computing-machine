@@ -10,9 +10,7 @@ module.exports = {
    */
   entry: "./src/index.ts",
   // Put your normal webpack config below here
-  module: {
-    rules,
-  },
+  module: { rules },
   resolve: {
     extensions: [".js", ".ts", ".jsx", ".tsx", ".css", ".json"],
     alias,

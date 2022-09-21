@@ -1,7 +1,21 @@
 import { IconName } from "@utils/hooks/use-icon"
 
+/**
+ * Application activity
+ */
 export type Activity = {
-  name: string
+  /**
+   * Unique activity identifier.
+   */
+  id: string
+
+  /**
+   * Activity icon (can be selected from the provided list).
+   */
   icon: IconName
+
+  /**
+   * Translation string of the activity name.
+   */
   title: string
 }

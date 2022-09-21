@@ -1,12 +1,9 @@
 import { Unary, Unpack } from "./types"
 
-export const isFunction = <T = any, K = T>(x: any): x is Unary<T, K> =>
-  typeof x == "function"
+export const isFunction = <T = any, K = T>(x: any): x is Unary<T, K> => typeof x == "function"
 
 export interface ISwitchStatic {
-  of: <TResult extends any[] = [], TContext = any>(
-    x: TContext
-  ) => ISwitch<TContext, TResult>
+  of: <TResult extends any[] = [], TContext = any>(x: TContext) => ISwitch<TContext, TResult>
 }
 
 export interface ISwitch<TContext, TResult extends any[]> {
@@ -14,9 +11,7 @@ export interface ISwitch<TContext, TResult extends any[]> {
     predicate: TContext | Unary<TContext, boolean>,
     onTrue: TNewResult
   ) => ISwitch<TContext, [Unpack<TResult>, TNewResult]>
-  default: <TDefaultResult>(
-    defaultValue: TDefaultResult
-  ) => Unpack<TResult> | TDefaultResult
+  default: <TDefaultResult>(defaultValue: TDefaultResult) => Unpack<TResult> | TDefaultResult
 }
 
 const Switch: ISwitchStatic = {
@@ -30,13 +25,9 @@ const swichMatched = <TContext, TResult extends any[] = []>(
   default: () => x as any,
 })
 
-const swich = <TContext, TResult extends any[] = []>(
-  x: TContext
-): ISwitch<TContext, TResult> => ({
+const swich = <TContext, TResult extends any[] = []>(x: TContext): ISwitch<TContext, TResult> => ({
   case: (predicate, onTrue) => {
-    const isTrue = isFunction(predicate)
-      ? predicate(x)
-      : (predicate as any) === x
+    const isTrue = isFunction(predicate) ? predicate(x) : (predicate as any) === x
 
     return isTrue ? swichMatched(onTrue) : (swich(x) as any)
   },

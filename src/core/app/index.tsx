@@ -1,19 +1,20 @@
 import type { UserSettings } from "@core/settings/types"
 
-import React, { useLayoutEffect, useState } from "react"
+import React, { useLayoutEffect, useState, useEffect } from "react"
 import SplitView from "react-split"
 import { useHotkeys } from "react-hotkeys-hook"
 
-import {
-  SPLIT_DEFAULT_SIZES,
-  SPLIT_SNAP_OFFSET,
-  SPLIT_MIN_SIZE,
-} from "@core/app/constants"
+import { SPLIT_DEFAULT_SIZES, SPLIT_SNAP_OFFSET, SPLIT_MIN_SIZE } from "@core/app/constants"
+import { useOrdoEmitWithAPI } from "@utils/hooks/use-ordo-emit"
+import { useGlobalEvent } from "@utils/hooks/use-global-event"
+import { noOp } from "@utils/no-op"
+import Switch from "@utils/switch"
+import i18n from "@i18n/index"
 
 import ActivityBar from "@core/activity-bar"
 import SideBar from "@core/side-bar"
 import Workspace from "@core/workspace"
-import { useGlobalEvent } from "@utils/hooks/use-global-event"
+import { tap } from "ramda"
 // import Overlay from "@core/overlay"
 // import StatusBar from "@core/status-bar"
 // import CommandBar from "@core/command-bar"
@@ -25,20 +26,35 @@ export default function App() {
   const [sizes, setSizes] = useState<[number, number]>(SPLIT_DEFAULT_SIZES)
   const [fontSize, setFontSize] = useState(16)
 
-  useGlobalEvent("@app/user-settings-updated", ([key, value]: any) => {
-    if (key === "editor.font-size") {
-      setFontSize(value)
-    }
+  const emitGetUserSettings = useOrdoEmitWithAPI("@app/get-user-settings")
+  const emitListFolder = useOrdoEmitWithAPI("@app/list-folder")
+
+  useGlobalEvent("@app/set-user-setting::applied", (payload) => {
+    const [key, value] = payload.emitted.payload
+
+    const modify = Switch.of(key)
+      .case("appearance.language", () => i18n.changeLanguage(value))
+      .case("editor.font-size", () => setFontSize(value))
+      .default(noOp)
+
+    modify()
   })
+
+  useEffect(() => {
+    emitGetUserSettings()
+      .then(
+        tap((settings: UserSettings) =>
+          emitListFolder(settings["project.personal.directory"]).then(console.log)
+        )
+      )
+      .then((settings: UserSettings) => i18n.changeLanguage(settings["appearance.language"]))
+  }, [])
 
   useLayoutEffect(() => {
     const body = document.querySelector(":root") as HTMLElement
-
-    if (!body) return
-
     const size = fontSize >= 8 ? fontSize : 8
 
-    body.style.fontSize = `${size}px`
+    if (body) body.style.fontSize = `${size}px`
   }, [fontSize])
 
   useHotkeys(
@@ -81,11 +97,7 @@ export default function App() {
           onDrag={handleDrag}
           onDragEnd={handleDragEnd}
         >
-          <div
-            className={`bg-neutral-100 dark:bg-neutral-900 ${
-              isLeftCollapsed && "hidden"
-            }`}
-          >
+          <div className={`bg-neutral-200 dark:bg-neutral-900 ${isLeftCollapsed && "hidden"}`}>
             <SideBar />
           </div>
           <div className={`${isRightCollapsed && "hidden"}`}>

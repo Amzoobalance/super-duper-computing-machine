@@ -1,4 +1,5 @@
 import { Color } from "@core/colors"
+import { Nullable } from "@core/types"
 
 export type OrdoPathLike = string
 export type OrdoPath = OrdoPathLike
@@ -10,9 +11,7 @@ export type OrdoAppEvent<T = unknown> = {
   payload: T
 }
 
-export type OrdoFile<
-  TMetadata extends Record<string, unknown> = Record<string, unknown>
-> = {
+export interface OrdoFSElement {
   path: OrdoPath
   relativePath: OrdoRelativePath
   readableName: string
@@ -21,14 +20,17 @@ export type OrdoFile<
   createdAt: Date
   updatedAt: Date
   accessedAt: Date
-  extension: OrdoFileExtension
-  size: number
-  metadata: TMetadata & { color: Color }
 }
 
-export type OrdoFolder<
-  TMetadata extends Record<string, unknown> = Record<string, unknown>
-> = OrdoFile<TMetadata> & {
+export interface OrdoFile<TMetadata extends Record<string, unknown> = Record<string, unknown>>
+  extends OrdoFSElement {
+  extension: Nullable<OrdoFileExtension>
+  metadata: TMetadata & { color: Color }
+  size: number
+}
+
+export interface OrdoFolder<TMetadata extends Record<string, unknown> = Record<string, unknown>>
+  extends OrdoFSElement {
   children: (OrdoFile | OrdoFolder)[]
-  extension: null
+  metadata: TMetadata & { color: Color }
 }

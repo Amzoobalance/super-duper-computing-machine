@@ -1,11 +1,10 @@
 import type { IpcMain } from "electron"
 import type { Fn } from "@core/types"
 
-export const registerMainHandlers =
-  (handlers: Record<string, Fn>) => (ipcMain: IpcMain) => {
-    const keys = Object.keys(handlers)
+export const registerMainHandlers = (handlers: Record<string, Fn>) => (ipcMain: IpcMain) => {
+  const keys = Object.keys(handlers)
 
-    keys.forEach((key) => ipcMain.handle(key, (_, args) => handlers[key](args)))
+  keys.forEach((key) => ipcMain.handle(key, (_, payload) => handlers[key](payload)))
 
-    return () => keys.forEach((key) => ipcMain.removeHandler(key))
-  }
+  return () => keys.forEach((key) => ipcMain.removeHandler(key))
+}

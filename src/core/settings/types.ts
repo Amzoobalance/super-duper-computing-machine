@@ -1,6 +1,7 @@
 import { Language } from "@core/locales"
 import { Theme } from "@core/theme"
 import { USER_SETTINGS_SCHEMA } from "@core/settings/user-settings-schema"
+import { BinaryFn, UnaryFn } from "@core/types"
 
 /**
  * Settings applied on each device. Controlled by user.
@@ -65,10 +66,9 @@ export const FileAssociations: Record<string, string[]> = {
   text: [".txt"],
 }
 
-export type SettingsItemProps<
-  Key extends keyof UserSettings = keyof UserSettings
-> = {
+export type SettingsItemProps<Key extends keyof UserSettings = keyof UserSettings> = {
   schema: typeof USER_SETTINGS_SCHEMA[Key]
   schemaKey: Key
   value: UserSettings[Key]
+  onChange: BinaryFn<Key, UserSettings[Key], void>
 }

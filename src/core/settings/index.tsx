@@ -10,36 +10,26 @@ import i18n from "@i18n/index"
 
 import Setting from "@core/settings/components/settings-item"
 import NoOp from "@utils/no-op"
-import { tap } from "ramda"
+import { useOrdoEmitWithAPI } from "@utils/hooks/use-ordo-emit"
 
-const changeLanguage = (settings: UserSettings) => {
-  const newLanguage = settings["appearance.language"]
-  const oldLanguage = i18n.language
-
-  if (oldLanguage !== newLanguage) {
-    i18n.changeLanguage(newLanguage)
-  }
-}
-
+/**
+ * Application settings page.
+ */
 export default function Settings() {
-  const schemaKeys = Object.keys(
-    USER_SETTINGS_SCHEMA
-  ) as (keyof typeof USER_SETTINGS_SCHEMA)[]
+  // TODO: Disallow opening sidebar
+  const schemaKeys = Object.keys(USER_SETTINGS_SCHEMA) as (keyof typeof USER_SETTINGS_SCHEMA)[]
 
   const [userSettings, setUserSettings] = useState<Nullable<UserSettings>>(null)
 
+  const emitSetUserSetting = useOrdoEmitWithAPI("@app/set-user-setting")
+  const emitGetUserSettings = useOrdoEmitWithAPI("@app/get-user-settings")
+
   useEffect(() => {
-    window.api
-      .emit("@app/get-user-settings")
-      .then(tap(changeLanguage))
-      .then(setUserSettings)
+    emitGetUserSettings().then(setUserSettings)
   }, [])
 
-  useGlobalEvent("@app/user-settings-updated", () => {
-    window.api
-      .emit("@app/get-user-settings")
-      .then(tap(changeLanguage))
-      .then(setUserSettings)
+  useGlobalEvent("@app/set-user-setting::applied", () => {
+    emitGetUserSettings().then(setUserSettings)
   })
 
   return Either.fromNullable(userSettings).fold(NoOp, (settings) => (
@@ -51,6 +41,7 @@ export default function Settings() {
             schemaKey={key}
             schema={USER_SETTINGS_SCHEMA[key]}
             value={settings[key]}
+            onChange={(key, value) => emitSetUserSetting([key, value])}
           />
         ))}
       </form>
