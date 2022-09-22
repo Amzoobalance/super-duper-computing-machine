@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "module": "commonjs",
+    "module": "ESNext",
     "jsx": "react",
     "allowJs": true,
     "skipLibCheck": true,

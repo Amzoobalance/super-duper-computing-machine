@@ -3,11 +3,6 @@ import type { OrdoFolder } from "@core/app/types"
 import { isFolder } from "@core/app/main/is-folder"
 
 export const sortOrdoFolder = (folder: OrdoFolder): OrdoFolder => {
-  if (!folder.children) {
-    console.log(folder)
-
-    return folder
-  }
   folder.children = folder.children.sort((a, b) => {
     if (isFolder(a)) {
       sortOrdoFolder(a)

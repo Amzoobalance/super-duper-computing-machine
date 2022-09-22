@@ -73,10 +73,8 @@ const createWindow = () => {
   })
 
   const documentsPath = app.getPath("documents")
-  const ordoPath = join(documentsPath, "Ordo")
-
   // TODO: Use this by default if other project folder was not selected by the user!
-  console.log(ordoPath)
+  const ordoPath = join(documentsPath, "Ordo")
 
   Menu.setApplicationMenu(Menu.buildFromTemplate([]))
 

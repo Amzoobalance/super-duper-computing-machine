@@ -41,12 +41,18 @@ export default function App() {
   })
 
   useEffect(() => {
+    const worker = new SharedWorker(new URL("@core/app/ordo-folder-worker", import.meta.url))
+
+    worker.port.addEventListener("message", (e) => console.log(e.data, "from window"), false)
+
+    worker.port.start()
+
+    worker.port.postMessage("woof")
+  }, [])
+
+  useEffect(() => {
     emitGetUserSettings()
-      .then(
-        tap((settings: UserSettings) =>
-          emitListFolder(settings["project.personal.directory"]).then(console.log)
-        )
-      )
+      .then(tap((settings: UserSettings) => emitListFolder(settings["project.personal.directory"])))
       .then((settings: UserSettings) => i18n.changeLanguage(settings["appearance.language"]))
   }, [])
 
