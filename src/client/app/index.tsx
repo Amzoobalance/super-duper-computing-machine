@@ -5,7 +5,7 @@ import SplitView from "react-split"
 import { SPLIT_DEFAULT_SIZES, SPLIT_SNAP_OFFSET, SPLIT_MIN_SIZE } from "@client/app/constants"
 import { useAppDispatch, useAppSelector } from "@client/state"
 import { selectActivity } from "@client/activity-bar/store"
-import { getLocalSettings, getUserSettings } from "@client/app/store"
+import { getLocalSettings, getUserSettings, listFolder } from "@client/app/store"
 import i18n from "@client/i18n"
 
 import ActivityBar from "@client/activity-bar"
@@ -22,8 +22,11 @@ export default function App() {
   const fontSize = useAppSelector((state) => state.app.userSettings?.["editor.font-size"]) ?? 16
   const language =
     useAppSelector((state) => state.app.userSettings?.["appearance.language"]) ?? "en"
+  const personalProjectDirectory = useAppSelector(
+    (state) => state.app.userSettings?.["project.personal.directory"]
+  )
 
-  const [isLeftCollapsed, setIsLeftCollapsed] = useState(true)
+  const [isLeftCollapsed, setIsLeftCollapsed] = useState(false)
   const [isRightCollapsed, setIsRightCollapsed] = useState(false)
   const [sizes, setSizes] = useState<[number, number]>(SPLIT_DEFAULT_SIZES)
 
@@ -59,6 +62,12 @@ export default function App() {
     dispatch(getLocalSettings())
   }, [])
 
+  useEffect(() => {
+    if (!personalProjectDirectory) return
+
+    dispatch(listFolder(personalProjectDirectory))
+  }, [personalProjectDirectory])
+
   const handleDragEnd = (sectionSizes: [number, number]) => {
     setSizes(sectionSizes)
   }
@@ -86,7 +95,7 @@ export default function App() {
           onDragEnd={handleDragEnd}
         >
           <div
-            className={`overflow-y-visible h-full bg-neutral-200 dark:bg-neutral-900 ${
+            className={`overflow-y-scroll h-full bg-neutral-200 dark:bg-neutral-900 ${
               isLeftCollapsed && "hidden"
             }`}
           >

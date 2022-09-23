@@ -1,5 +1,4 @@
 import type { OrdoFolder } from "@core/app/types"
-import type { Nullable } from "@core/types"
 
 import { promises, existsSync } from "fs"
 import { join } from "path"
@@ -8,18 +7,17 @@ import { Color } from "@core/colors"
 import { createOrdoFolder } from "@main/app/create-ordo-folder"
 import { createOrdoFile } from "@main/app/create-ordo-file"
 import { sortOrdoFolder } from "@main/app/sort-ordo-folder"
-import { METADATA_FILE_EXTENSION, ORDO_MARKDOWN_FILE_EXTENSION } from "@main/app/constants"
+import { ORDO_METADATA_EXTENSION, ORDO_FILE_EXTENSION } from "@core/app/constants"
 
 export const handleListFolder = async (
   path: string,
   depth = 0,
-  rootPath = path,
-  parent: Nullable<OrdoFolder>
+  rootPath = path
 ): Promise<OrdoFolder> => {
   // Check if provided path exists
   if (!existsSync(path)) {
     // TODO: Add error to translations
-    throw new Error("ordo.error.list-folder.path-does-not-exist")
+    throw new Error("app.error.list-folder.path-does-not-exist")
   }
 
   const stat = await promises.stat(path)
@@ -27,7 +25,7 @@ export const handleListFolder = async (
   // Check if provided path is a folder
   if (!stat.isDirectory()) {
     // TODO: Add error to translations
-    throw new Error("ordo.error.list-folder.not-a-folder")
+    throw new Error("app.error.list-folder.not-a-folder")
   }
 
   // Get the list of files inside the folder
@@ -46,7 +44,6 @@ export const handleListFolder = async (
     createdAt: stat.birthtime,
     updatedAt: stat.mtime,
     accessedAt: stat.atime,
-    parent,
   })
 
   for (const item of folder) {
@@ -56,9 +53,9 @@ export const handleListFolder = async (
     // TODO: Add encryption for meta and files with a dedicated password
 
     if (item.isDirectory()) {
-      ordoFolder.children.push(await handleListFolder(itemPath, depth + 1, rootPath, ordoFolder))
+      ordoFolder.children.push(await handleListFolder(itemPath, depth + 1, rootPath))
     } else if (item.isFile()) {
-      const isMetadataFile = item.name.endsWith(METADATA_FILE_EXTENSION)
+      const isMetadataFile = item.name.endsWith(ORDO_METADATA_EXTENSION)
 
       // Skip metadata files right now because they are handled separately
       if (isMetadataFile) continue
@@ -74,11 +71,10 @@ export const handleListFolder = async (
         updatedAt: mtime,
         accessedAt: atime,
         size,
-        parent: ordoFolder,
       })
 
-      if (ordoFile.extension === ORDO_MARKDOWN_FILE_EXTENSION) {
-        const metadataPath = `${ordoFile.path}${METADATA_FILE_EXTENSION}`
+      if (ordoFile.extension === ORDO_FILE_EXTENSION) {
+        const metadataPath = `${ordoFile.path}${ORDO_METADATA_EXTENSION}`
 
         if (existsSync(metadataPath)) {
           try {

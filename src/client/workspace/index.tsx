@@ -1,16 +1,13 @@
 import React from "react"
 
-import { useAppSelector } from "@client/state"
-
-import Null from "@client/null"
-import Settings from "@client/app/settings"
+import { useWorkspaceComponent } from "./hooks/use-workspace-component"
 
 export default function Workspace() {
-  const currentActivity = useAppSelector((state) => state.activityBar.currentActivity)
+  const Component = useWorkspaceComponent()
 
   return (
-    <div className="p-2 workspace h-full outline-none">
-      {currentActivity === "settings" ? <Settings /> : <Null />}
+    <div className="p-4 workspace h-full outline-none">
+      <Component />
     </div>
   )
 }

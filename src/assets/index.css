@@ -136,6 +136,7 @@
 
 * {
   font-family: Jost, sans-serif;
+  @apply select-none;
 }
 
 .gutter {
@@ -151,5 +152,24 @@
   &.gutter-vertical {
     background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=");
     @apply cursor-row-resize;
+  }
+}
+
+* {
+  &::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+
+    &-thumb {
+      @apply invisible rounded-lg bg-neutral-300 dark:bg-neutral-600 my-2;
+    }
+  }
+
+  &:hover {
+    &::-webkit-scrollbar {
+      &-thumb {
+        @apply visible;
+      }
+    }
   }
 }

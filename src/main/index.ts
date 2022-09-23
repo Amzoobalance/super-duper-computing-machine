@@ -1,5 +1,5 @@
 import { enforceMacOSAppLocation, is, setContentSecurityPolicy } from "electron-util"
-import { app, BrowserWindow, ipcMain, Menu } from "electron"
+import { app, BrowserWindow, ipcMain, Menu, nativeTheme } from "electron"
 import { join } from "path"
 
 import Either from "@core/utils/either"
@@ -7,6 +7,7 @@ import { noOp } from "@core/utils/no-op"
 
 import LocalSettingsStore from "@main/app/local-settings-store"
 import createAppApi from "@main/app"
+import userSettingsStore from "./app/user-settings-store"
 
 // TODO: Add a way to conveniently import main handlers
 // TODO: It looks like an extension needs a way to export translations, main handlers, components (add more later on)
@@ -69,6 +70,8 @@ const createWindow = () => {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
     },
   })
+
+  nativeTheme.themeSource = userSettingsStore.get("appearance.theme")
 
   const documentsPath = app.getPath("documents")
   // TODO: Use this by default if other project folder was not selected by the user!

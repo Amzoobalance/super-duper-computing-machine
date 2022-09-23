@@ -1,5 +1,5 @@
 import type { Nullable } from "@core/types"
-import type { LocalSettings, OrdoFolder, UserSettings } from "@core/app/types"
+import type { LocalSettings, OrdoFile, OrdoFolder, UserSettings } from "@core/app/types"
 
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit"
 
@@ -7,12 +7,16 @@ export type AppState = {
   userSettings: UserSettings
   localSettings: LocalSettings
   personalDirectory: Nullable<OrdoFolder>
+  currentFileRaw: string
+  currentFile: Nullable<OrdoFile>
 }
 
 const initialState: AppState = {
   userSettings: {} as UserSettings,
   localSettings: {} as LocalSettings,
   personalDirectory: null,
+  currentFileRaw: "",
+  currentFile: null,
 }
 
 export const getUserSettings = createAsyncThunk("@app/getUserSettings", async () =>
@@ -26,6 +30,14 @@ export const getLocalSettings = createAsyncThunk("@app/getLocalSettings", () =>
 export const selectPersonalProjectDirectory = createAsyncThunk(
   "@app/selectPersonalProjectDirectory",
   () => window.ordo.emit<string>({ type: "@app/selectPersonalProjectDirectory" })
+)
+
+export const listFolder = createAsyncThunk("@app/listFolder", (payload: string) =>
+  window.ordo.emit<OrdoFolder, string>({ type: "@app/listFolder", payload })
+)
+
+export const openFile = createAsyncThunk("@app/openFile", (payload: OrdoFile) =>
+  window.ordo.emit<{ file: OrdoFile; raw: string }, OrdoFile>({ type: "@app/openFile", payload })
 )
 
 export const appSlice = createSlice({
@@ -47,6 +59,7 @@ export const appSlice = createSlice({
     ) => {
       const [key, value] = action.payload
       state.localSettings[key] = value
+
       window.ordo.emit(action)
     },
   },
@@ -60,6 +73,13 @@ export const appSlice = createSlice({
       })
       .addCase(selectPersonalProjectDirectory.fulfilled, (state, action) => {
         state.userSettings["project.personal.directory"] = action.payload
+      })
+      .addCase(listFolder.fulfilled, (state, action) => {
+        state.personalDirectory = action.payload
+      })
+      .addCase(openFile.fulfilled, (state, action) => {
+        state.currentFileRaw = action.payload.raw
+        state.currentFile = action.payload.file
       })
   },
 })

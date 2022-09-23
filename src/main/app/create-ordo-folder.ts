@@ -1,12 +1,11 @@
 import type { OrdoFile, OrdoFolder, OrdoPath, OrdoRelativePath } from "@core/app/types"
-import { Color } from "@core/colors"
-import { Nullable } from "@core/types"
 
 import { sep } from "path"
 import { slice, lastIndexOf, pipe, add } from "ramda"
 
+import { Color } from "@core/colors"
+
 type Props = {
-  parent: Nullable<OrdoFolder>
   path: OrdoPath
   relativePath: OrdoRelativePath
   depth: number

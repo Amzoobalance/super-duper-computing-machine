@@ -5,7 +5,7 @@ import { getLocalSettings, getUserSettings } from "@client/app/store"
 import { USER_SETTINGS_SCHEMA } from "@core/app/user-settings-schema"
 import Either from "@core/utils/either"
 
-import SettingsItem from "@client/app/components/settings-item"
+import SettingsItem from "@client/app/components/settings/settings-item"
 import Null from "@client/null"
 
 /**

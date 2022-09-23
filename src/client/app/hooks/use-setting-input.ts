@@ -4,11 +4,11 @@ import Switch from "@core/utils/switch"
 
 import { USER_SETTINGS_SCHEMA } from "@core/app/user-settings-schema"
 
-import CheckboxSetting from "@client/app/components/checkbox-setting"
-import SelectSetting from "@client/app/components/select-setting"
-import StringSetting from "@client/app/components/string-setting"
-import NumberSetting from "@client/app/components/number-setting"
-import SelectFolderSetting from "@client/app/components/select-folder-setting"
+import CheckboxSetting from "@client/app/components/settings/checkbox-setting"
+import SelectSetting from "@client/app/components/settings/select-setting"
+import StringSetting from "@client/app/components/settings/string-setting"
+import NumberSetting from "@client/app/components/settings/number-setting"
+import SelectFolderSetting from "@client/app/components/settings/select-folder-setting"
 import Null from "@client/null"
 
 export const useSettingInput = <Key extends keyof typeof USER_SETTINGS_SCHEMA>(

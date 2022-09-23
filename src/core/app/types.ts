@@ -18,7 +18,6 @@ export interface OrdoFSElement {
   path: OrdoPath
   relativePath: OrdoRelativePath
   readableName: string
-  parent: OrdoFolder | null
   depth: number
   createdAt: Date
   updatedAt: Date
@@ -74,29 +73,4 @@ export type LocalSettings = {
   "side-bar.width": number
   "file-explorer.expanded-folders": string[]
   // "project.external.directories": string[]
-}
-
-/**
- * Project settings.
- */
-export const FileAssociations: Record<string, string[]> = {
-  image: [
-    ".apng",
-    ".avif",
-    ".gif",
-    ".jpg",
-    ".jpeg",
-    ".pgpeg",
-    ".pjp",
-    ".svg",
-    ".webp",
-    ".bmp",
-    ".ico",
-    ".cur",
-    ".tif",
-    ".tiff",
-  ],
-  ordo: [".mdx"],
-  markdown: [".md"],
-  text: [".txt"],
 }
