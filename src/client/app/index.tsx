@@ -78,17 +78,21 @@ export default function App() {
       <div className="flex grow">
         <ActivityBar />
         <SplitView
-          className="flex grow"
+          className="fixed top-0 left-11 right-0 bottom-0 flex grow"
           sizes={sizes}
           snapOffset={SPLIT_SNAP_OFFSET}
           minSize={SPLIT_MIN_SIZE}
           onDrag={handleDrag}
           onDragEnd={handleDragEnd}
         >
-          <div className={`bg-neutral-200 dark:bg-neutral-900 ${isLeftCollapsed && "hidden"}`}>
+          <div
+            className={`overflow-y-visible h-full bg-neutral-200 dark:bg-neutral-900 ${
+              isLeftCollapsed && "hidden"
+            }`}
+          >
             <SideBar />
           </div>
-          <div className={`${isRightCollapsed && "hidden"}`}>
+          <div className={`overflow-y-scroll h-full ${isRightCollapsed && "hidden"}`}>
             <Workspace />
           </div>
         </SplitView>

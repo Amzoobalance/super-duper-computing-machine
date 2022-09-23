@@ -19,7 +19,7 @@ export default function SettingsItem({ schemaKey, schema, value }: SettingsItemP
   return (
     <div className="settings-item">
       <label className="flex flex-col space-x-4 space-y-4 md:space-y-0 md:flex-row justify-between md:items-center p-8 lg:px-64 settings-item-label">
-        <div className="md:w-3/4">
+        <div className="md:w-1/2">
           <h2 className="text-center md:text-left text-lg font-bold settings-item-title">
             {t(titleTranslationKey)}
           </h2>
@@ -28,7 +28,7 @@ export default function SettingsItem({ schemaKey, schema, value }: SettingsItemP
           </h3>
         </div>
 
-        <div className="md:w-1/4 flex justify-center md:justify-end items-center">
+        <div className="md:w-1/3 flex justify-center md:justify-end items-center">
           <InputComponent value={value} schema={schema} schemaKey={schemaKey} />
         </div>
       </label>
