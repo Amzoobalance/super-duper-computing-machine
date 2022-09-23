@@ -20,10 +20,9 @@
     "resolveJsonModule": true,
     "paths": {
       "@assets/*": ["src/assets/*"],
+      "@client/*": ["src/client/*"],
+      "@main/*": ["src/main/*"],
       "@core/*": ["src/core/*"],
-      "@extensions/*": ["src/extensions/*"],
-      "@utils/*": ["src/utils/*"],
-      "@i18n/*": ["src/i18n/*"],
       "*": ["node_modules/*"]
     }
   },
