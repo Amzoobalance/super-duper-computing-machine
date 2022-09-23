@@ -9,15 +9,10 @@ export type Activity = {
   /**
    * Unique activity identifier.
    */
-  id: ActivityID
+  name: ActivityID
 
   /**
    * Activity icon (can be selected from the provided list).
    */
   icon: IconName
-
-  /**
-   * Translation string of the activity name.
-   */
-  title: string
 }

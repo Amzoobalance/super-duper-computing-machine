@@ -13,13 +13,13 @@ type Props = Activity & { currentActivityName: string }
 /**
  * Activity bar icon with title and click handler.
  */
-export default function ActivityBarItem({ icon, id: name, title, currentActivityName }: Props) {
+export default function ActivityBarItem({ icon, name, currentActivityName }: Props) {
   const dispatch = useAppDispatch()
   const Icon = useIcon(icon)
   const className = useActivityBarItemClass({ name, currentActivityName })
   const { t } = useTranslation()
 
-  const translatedTitle = t(title)
+  const translatedTitle = t(`${name}.activity.title`)
 
   const handleClick = () => dispatch(selectActivity(name))
 

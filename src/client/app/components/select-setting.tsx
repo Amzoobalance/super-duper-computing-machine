@@ -1,13 +1,13 @@
 import type { SettingsItemProps } from "@client/app/types"
 
 import React, { ChangeEvent } from "react"
-import { useTranslation } from "react-i18next"
 
 import Either from "@core/utils/either"
 import { useAppDispatch } from "@client/state"
 import { setUserSetting } from "@client/app/store"
 
 import Null from "@client/null"
+import SelectSettingOption from "./select-setting-option"
 
 /**
  * Input for enum settings.
@@ -18,8 +18,6 @@ export default function SelectSetting({
   schema,
 }: SettingsItemProps<"project.personal.directory">) {
   const dispatch = useAppDispatch()
-  // TODO: Add extension-level `useTranslation` that automatically appends the scope
-  const { t } = useTranslation()
 
   const handleChange = (event: ChangeEvent<HTMLSelectElement>) =>
     dispatch(setUserSetting([schemaKey, event.target.value]))
@@ -31,9 +29,7 @@ export default function SelectSetting({
       onChange={handleChange}
     >
       {options.map((option: string) => (
-        <option key={`${schemaKey}-${option}`} value={option}>
-          {t(option)}
-        </option>
+        <SelectSettingOption key={`${schemaKey}-${option}`} option={option} />
       ))}
     </select>
   ))

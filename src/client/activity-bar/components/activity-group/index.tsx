@@ -18,10 +18,9 @@ export default function ActivityGroup({ activities, currentActivity }: Props) {
     <div className="flex flex-col space-y-4 items-center activity-bar-group">
       {activities.map((activity) => (
         <ActivityBarItem
-          key={activity.id}
+          key={activity.name}
           icon={activity.icon}
-          title={activity.title}
-          id={activity.id}
+          name={activity.name}
           currentActivityName={currentActivity}
         />
       ))}

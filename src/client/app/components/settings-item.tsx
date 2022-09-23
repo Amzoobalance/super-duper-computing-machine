@@ -11,8 +11,8 @@ import { useSettingInput } from "@client/app/hooks/use-setting-input"
 export default function SettingsItem({ schemaKey, schema, value }: SettingsItemProps) {
   const { t } = useTranslation()
 
-  const titleTranslationKey = `${schemaKey}.title`
-  const descriptionTranslationKey = `${schemaKey}.description`
+  const titleTranslationKey = `app.${schemaKey}.title`
+  const descriptionTranslationKey = `app.${schemaKey}.description`
 
   const InputComponent = useSettingInput(schemaKey, schema)
 

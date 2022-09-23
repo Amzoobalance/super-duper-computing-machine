@@ -5,7 +5,7 @@ import { topActivities } from "@client/activity-bar/activities"
 
 export type ActivityBarState = {
   activities: Activity[]
-  currentActivity: Activity["id"]
+  currentActivity: Activity["name"]
 }
 
 const initialState: ActivityBarState = {

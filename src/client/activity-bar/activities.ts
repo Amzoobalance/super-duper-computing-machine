@@ -6,8 +6,7 @@ import type { Activity } from "@client/activity-bar/types"
  */
 export const topActivities: Activity[] = [
   {
-    id: "editor",
-    title: "ordo.activity.editor.title",
+    name: "editor",
     icon: "BsLayoutTextWindow",
   },
   // {
@@ -43,8 +42,7 @@ export const topActivities: Activity[] = [
 export const bottomActivities: Activity[] = [
   {
     icon: "BsBell",
-    title: "ordo.activity.notifications.title",
-    id: "notifications",
+    name: "notifications",
   },
   // {
   //   icon: "BsPerson",
@@ -63,7 +61,6 @@ export const bottomActivities: Activity[] = [
   // },
   {
     icon: "FaCogs",
-    title: "ordo.activity.settings.title",
-    id: "settings",
+    name: "settings",
   },
 ]

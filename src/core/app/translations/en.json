@@ -1,0 +1,21 @@
+{
+  "settings.activity.title": "Settings",
+  "app.appearance.theme.title": "Theme",
+  "app.appearance.theme.description": "Let the darkness (or the lightness?) be with you.",
+  "app.appearance.language.title": "Language",
+  "app.appearance.language.description": "Do you speak it?",
+  "app.editor.font-size.title": "Font size",
+  "app.editor.font-size.description": "Just in case you want to get a clearer picture.",
+  "app.project.personal.select-directory": "Choose a folder where you want your files to be stored",
+  "app.project.personal.directory.title": "Project folder",
+  "app.project.personal.directory.description": "This is where you can find your Ordo files on your computer. You can change this folder at any time. All your files will be copied to the new directory",
+  "app.files.confirm-move.title": "Confirm moving files or folders",
+  "app.files.confirm-move.description": "Show the annoying alert box asking if you are sure you want to do what you want to do.",
+  "app.files.confirm-delete.title": "Confirm removing files or folders",
+  "app.files.confirm-delete.description": "Show the annoying alert box asking if you are sure you want to do what you want to do.",
+  "app.system": "System",
+  "app.light": "Light",
+  "app.dark": "Dark",
+  "app.en": "English",
+  "app.ru": "Русский"
+}

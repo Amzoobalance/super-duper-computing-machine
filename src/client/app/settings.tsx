@@ -5,7 +5,7 @@ import { getLocalSettings, getUserSettings } from "@client/app/store"
 import { USER_SETTINGS_SCHEMA } from "@core/app/user-settings-schema"
 import Either from "@core/utils/either"
 
-import Setting from "@client/app/components/settings-item"
+import SettingsItem from "@client/app/components/settings-item"
 import Null from "@client/null"
 
 /**
@@ -27,7 +27,7 @@ export default function Settings() {
     <div className="settings">
       <form className="settings-form">
         {schemaKeys.map((key) => (
-          <Setting
+          <SettingsItem
             key={key}
             schemaKey={key}
             schema={USER_SETTINGS_SCHEMA[key]}
