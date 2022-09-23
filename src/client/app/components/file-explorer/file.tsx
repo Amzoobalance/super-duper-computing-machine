@@ -7,18 +7,17 @@ import { useAppDispatch } from "@client/state"
 import { openFile } from "@client/app/store"
 
 type Props = {
-  file: OrdoFile
+  item: OrdoFile
 }
 
-export default function File({ file }: Props) {
+export default function File({ item }: Props) {
   const dispatch = useAppDispatch()
 
   const Icon = useIcon("BsFileEarmarkText")
 
-  // This is a TOPOR calculation aimed at aligning file icons with parent folder icons
-  const paddingLeft = `${(file.depth + 9) * 2}px`
+  const paddingLeft = `${(item.depth + 5) * 2}px`
 
-  const handleClick = () => dispatch(openFile(file))
+  const handleClick = () => dispatch(openFile(item))
 
   return (
     <div
@@ -27,7 +26,7 @@ export default function File({ file }: Props) {
       onClick={handleClick}
     >
       <Icon className="shrink-0" />
-      <div className="truncate">{file.readableName}</div>
+      <div className="truncate">{item.readableName}</div>
     </div>
   )
 }

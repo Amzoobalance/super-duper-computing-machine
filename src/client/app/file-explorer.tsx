@@ -1,23 +1,18 @@
 import React from "react"
 
 import { useAppSelector } from "@client/state"
-import { isFolder } from "@core/app/is-folder"
-
-import Directory from "@client/app/components/file-explorer/directory"
-import File from "@client/app/components/file-explorer/file"
+import Either from "@core/utils/either"
+import Null from "@client/null"
+import FileOrFolder from "./components/file-explorer/file-or-folder"
 
 export default function FileExplorer() {
   const personalDirectory = useAppSelector((state) => state.app.personalDirectory)
 
-  return (
+  return Either.fromNullable(personalDirectory).fold(Null, (root) => (
     <div>
-      {personalDirectory?.children.map((item) =>
-        isFolder(item) ? (
-          <Directory key={item.path} directory={item} />
-        ) : (
-          <File key={item.path} file={item} />
-        )
-      )}
+      {root.children.map((item) => (
+        <FileOrFolder key={item.path} item={item} />
+      ))}
     </div>
-  )
+  ))
 }

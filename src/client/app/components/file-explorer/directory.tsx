@@ -6,12 +6,13 @@ import { useIcon } from "@client/use-icon"
 import { isFolder } from "@core/app/is-folder"
 
 import File from "@client/app/components/file-explorer/file"
+import FileOrFolder from "./file-or-folder"
 
 type Props = {
-  directory: OrdoFolder
+  item: OrdoFolder
 }
 
-export default function Directory({ directory }: Props) {
+export default function Directory({ item }: Props) {
   const ChevronDown = useIcon("BsChevronDown")
   const ChevronRight = useIcon("BsChevronRight")
   const OpenFolder = useIcon("FaFolderOpen")
@@ -23,31 +24,29 @@ export default function Directory({ directory }: Props) {
   const FolderIcon = isExpanded ? OpenFolder : ClosedFolder
 
   // This increases padding. The deeper the folder, the righter it goes
-  const paddingLeft = `${(directory.depth + 5) * 2}px`
+  const paddingLeft = `${(item.depth + 5) * 2}px`
 
   const handleChevronClick = () => setIsExpanded((value) => !value)
 
   return (
-    <div style={{ paddingLeft }}>
+    <div>
       <div
-        className="flex items-center space-x-2 py-1 cursor-pointer hover:bg-neutral-300 hover:dark:bg-neutral-700 hover:rounded-md"
+        className="flex items-center space-x-2 py-1 px-2 cursor-pointer hover:bg-neutral-300 hover:dark:bg-neutral-700 hover:rounded-md"
         onClick={handleChevronClick}
       >
         <ChevronIcon className="shrink-0" />
         <FolderIcon className="shrink-0" />
-        <div className="truncate">{directory.readableName}</div>
+        <div className="truncate">{item.readableName}</div>
       </div>
-      {isExpanded && (
-        <div>
-          {directory.children.map((item) =>
-            isFolder(item) ? (
-              <Directory key={item.path} directory={item} />
-            ) : (
-              <File key={item.path} file={item} />
-            )
-          )}
-        </div>
-      )}
+      <div style={{ paddingLeft }}>
+        {isExpanded && (
+          <div>
+            {item.children.map((item) => (
+              <FileOrFolder key={item.path} item={item} />
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   )
 }
