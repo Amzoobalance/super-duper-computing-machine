@@ -62,6 +62,9 @@ export const appSlice = createSlice({
 
       window.ordo.emit(action)
     },
+    updateFile: (state: AppState, action: PayloadAction<string>) => {
+      state.currentFileRaw = action.payload
+    },
   },
   extraReducers: (builder) => {
     builder

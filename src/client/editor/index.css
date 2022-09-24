@@ -1,0 +1,21 @@
+.editor {
+  & > h1 {
+    @apply text-3xl font-black;
+  }
+
+  & > h2 {
+    @apply text-2xl font-bold;
+  }
+
+  & > h3 {
+    @apply text-xl font-black;
+  }
+
+  & > h4 {
+    @apply text-xl font-bold;
+  }
+
+  & > h5 {
+    @apply text-lg font-black;
+  }
+}
