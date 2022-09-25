@@ -6,7 +6,7 @@ export interface IEitherStatic {
   readonly isLeft: false
   readonly isRight: false
   try: <TRight, TLeft extends Error>(thunk: Thunk<TRight>) => IEither<TRight, TLeft>
-  fromNullable: <TRight>(x: Nullable<TRight>) => IEither<NonNullable<TRight>, null>
+  fromNullable: <TRight>(x: Nullable<TRight>) => IEither<TRight, null>
   fromBoolean: (x: boolean) => IEither<true, false>
   right: <TRight, TLeft = TRight>(x: TRight) => IEither<TRight, TLeft>
   left: <TLeft, TRight = TLeft>(x: TLeft) => IEither<TRight, TLeft>
@@ -26,8 +26,8 @@ export interface IEither<TRight, TLeft = TRight> {
   ) => IEither<TNewRight, TNewLeft>
   leftMap: <TNewLeft>(onLeft: UnaryFn<TLeft, TNewLeft>) => IEither<TRight, TNewLeft>
   chain: <TNewRight, TNewLeft = TNewRight>(
-    onRight: (x: TRight) => IEither<TNewRight, TNewLeft>
-  ) => IEither<TNewRight, TLeft | TNewLeft>
+    onRight: UnaryFn<TRight, IEither<TNewRight, TNewLeft>>
+  ) => IEither<TNewRight, TLeft>
   leftChain: <TNewLeft>(
     onLeft: (ctx: TLeft) => IEither<TRight, TNewLeft>
   ) => IEither<TRight, TNewLeft>
@@ -36,8 +36,8 @@ export interface IEither<TRight, TLeft = TRight> {
   ) => IEither<TNewRight, TLeft>
   getOrElse: <TNewLeft>(onLeft: UnaryFn<TLeft, TNewLeft>) => TNewLeft
   fold: <TNewRight, TNewLeft = TNewRight>(
-    onLeft: UnaryFn<TLeft, TNewLeft>,
-    onRight: UnaryFn<TRight, TNewRight>
+    onLeft: UnaryFn<TLeft, TNewLeft> | Thunk<TNewLeft>,
+    onRight: UnaryFn<TRight, TNewRight> | Thunk<TNewRight>
   ) => TNewLeft | TNewRight
 }
 
@@ -66,7 +66,7 @@ export const right = <TRight, TLeft = TRight>(x: TRight): IEither<TRight, TLeft>
   map: (onRight) => right(onRight(x)),
   leftMap: () => right(x),
   bimap: (_, onRight) => right(onRight(x)),
-  chain: (onRight) => onRight(x),
+  chain: (onRight) => onRight(x) as any,
   leftChain: () => right(x),
   ap: (other) => (other.isRight ? (right(other[unsafeGet]()(x)) as any) : right(x)),
   getOrElse: () => x as any,

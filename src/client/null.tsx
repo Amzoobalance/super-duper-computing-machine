@@ -1,5 +1,5 @@
-import type { UnaryFn } from "@core/types"
+import type { Thunk } from "@core/types"
 
-const Null: UnaryFn<[...any[]], null> = () => null
+const Null: Thunk<null> = () => null
 
 export default Null

@@ -8,7 +8,7 @@ export type Fn<Arguments = any, Result = void> = Arguments extends any[]
   ? () => Result
   : (arg: Arguments) => Result
 
-export type UnaryFn<Arg, Result> = Fn<Arg, Result>
+export type UnaryFn<Arg, Result> = (arg: Arg) => Result
 
 export type BinaryFn<Arg1, Arg2, Result> = Fn<[Arg1, Arg2], Result>
 

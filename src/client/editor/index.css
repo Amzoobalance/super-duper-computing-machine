@@ -18,4 +18,47 @@
   & > h5 {
     @apply text-lg font-black;
   }
+
+  &_caret {
+    &::before {
+      @apply absolute w-0.5 h-6 bg-purple-500 dark:bg-purple-300 align-middle rounded-full;
+      content: "";
+      animation: blinky 0.3s ease-out infinite alternative;
+    }
+
+    &_unfocused {
+      &::before {
+        @apply bg-neutral-500 dark:bg-neutral-300;
+        animation: unfocused 0.5s ease-in-out infinite alternative;
+        -webkit-animation: unfocused 0.5s ease-in-out infinite alternate;
+      }
+    }
+  }
+}
+
+@-webkit-keyframes blinky {
+  100% {
+    background: transparent;
+  }
+  0% {
+    @apply bg-purple-500 dark:bg-purple-300;
+  }
+}
+
+@keyframes unfocused {
+  100% {
+    background: transparent;
+  }
+  0% {
+    @apply bg-neutral-500 dark:bg-neutral-300;
+  }
+}
+
+@-webkit-keyframes unfocused {
+  100% {
+    background: transparent;
+  }
+  0% {
+    @apply bg-neutral-500 dark:bg-neutral-300;
+  }
 }

@@ -1,78 +1,88 @@
-import React, { useEffect, useRef, useState } from "react"
-import sanitize from "sanitize-html"
+import type { Root } from "mdast"
+import type { Nullable } from "@core/types"
 
-import ContentEditable from "react-contenteditable"
+import React, { useEffect, useState } from "react"
 
-import { useAppDispatch, useAppSelector } from "@client/state"
+import { useAppSelector } from "@client/state"
 import { getFileParser } from "@core/get-file-parser"
-
-import Null from "@client/null"
 import Either from "@core/utils/either"
 
+import Null from "@client/null"
+import BlockNode from "@client/editor/components/block-node"
+
 import "@client/editor/index.css"
-import { unified } from "unified"
-import rehypeParse from "rehype-parse"
-import rehypeRemark from "rehype-remark"
-import remarkStringify from "remark-stringify/lib"
+import { CaretRangeDirection } from "./constants"
+import { useHotkeys } from "react-hotkeys-hook"
+
+const initialCaretRanges = [
+  {
+    start: { line: 1, column: 0 },
+    end: { line: 1, column: 0 },
+    direction: CaretRangeDirection.LEFT_TO_RIGHT,
+  },
+]
 
 export default function Editor() {
-  const dispatch = useAppDispatch()
-
-  const [parsedFile, setParsedFile] = useState<any>(null)
   const [raw, setRaw] = useState("")
-  const [parse, setParse] = useState<(raw: string) => Promise<string>>(
-    () => async (raw: string) => raw
-  )
-
-  const editorRef = useRef(null)
+  const [parsedFile, setParsedFile] = useState<Nullable<Root>>(null)
+  const [parse, setParse] = useState<(raw: string) => Nullable<Root>>(() => null)
+  const [caretRanges, setCaretRanges] = useState([
+    {
+      start: { line: 1, column: 0 },
+      end: { line: 1, column: 0 },
+      direction: CaretRangeDirection.LEFT_TO_RIGHT,
+    },
+  ])
 
   const currentFileRaw = useAppSelector((state) => state.app.currentFileRaw)
   const currentFile = useAppSelector((state) => state.app.currentFile)
 
   useEffect(() => {
-    if (!currentFile) return
-
-    setParse(() => getFileParser(currentFile))
+    if (currentFile) setParse(() => getFileParser(currentFile))
   }, [currentFile?.extension])
 
   useEffect(() => {
-    if (!parse) return
-
-    parse(raw).then((result) => {
-      console.log(result)
-      setParsedFile(result)
-    })
+    if (parse) setParsedFile(parse(raw))
   }, [raw, parse])
 
   useEffect(() => {
-    if (!currentFileRaw) return
-
-    setRaw(currentFileRaw)
+    if (currentFileRaw) setRaw(currentFileRaw)
+    setCaretRanges(initialCaretRanges)
   }, [currentFileRaw])
 
-  return Either.fromNullable(parsedFile).fold(Null, () => (
-    <ContentEditable
-      ref={editorRef}
-      html={parsedFile}
-      onChange={(e) => {
-        const value = e.target.value
+  useHotkeys("down", () => {
+    const caretRangesCopy = [...caretRanges]
 
-        unified()
-          .use(rehypeParse)
-          .use(rehypeRemark, { newlines: true })
-          .use(remarkStringify)
-          .process(value)
-          .then(String)
-          .then((result) => {
-            console.log(result)
-            return result
-          })
-          .then(setRaw)
+    // TODO: validate if caret can go down further
+    caretRangesCopy.forEach((range) => {
+      range.start.line += 1
+    })
 
-        // const value = e.target.value
-        // parse(value).then(sanitize).then(setParsedFile)
-      }}
-      className="outline-none whitespace-pre-line h-full editor"
-    />
-  ))
+    setCaretRanges(caretRangesCopy)
+  })
+
+  useHotkeys("up", () => {
+    const caretRangesCopy = [...caretRanges]
+
+    // TODO: validate if caret can go up further
+    caretRangesCopy.forEach((range) => {
+      range.start.line -= 1
+    })
+
+    setCaretRanges(caretRangesCopy)
+  })
+
+  return Either.fromNullable(parsedFile)
+    .chain((file) => Either.fromNullable(file.children))
+    .fold(Null, (children) => (
+      <div>
+        {children.map((node) => (
+          <BlockNode
+            node={node}
+            caretRanges={caretRanges}
+            key={`${node.position?.start.line}-${node.position?.start.column}-${node.position?.end.line}-${node.position?.end.column}`}
+          />
+        ))}
+      </div>
+    ))
 }
