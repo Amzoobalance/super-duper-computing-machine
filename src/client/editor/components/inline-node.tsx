@@ -2,6 +2,7 @@ import type { PhrasingContent } from "mdast"
 
 import React from "react"
 import { CaretRange } from "../types"
+import Caret from "./caret"
 
 type Props = {
   node: PhrasingContent
@@ -41,8 +42,4 @@ export default function InlineNode({ node, caretRanges }: Props) {
       ))}
     </span>
   )
-}
-
-function Caret() {
-  return <span className="editor_caret"></span>
 }

@@ -1,18 +1,14 @@
-import type { Content } from "mdast"
-
 import React from "react"
 
 import InlineNode from "@client/editor/components/inline-node"
-import { CaretRange } from "../types"
+import { CaretRange, Line } from "../types"
 
 type Props = {
-  node: Content
+  node: Line
   caretRanges: CaretRange[]
 }
 
 export default function BlockNode({ node, caretRanges }: Props) {
-  if (node.type !== "paragraph") return null
-
   return (
     <p className="whitespace-pre">
       {node.children.map((childNode) => (

@@ -1,10 +1,9 @@
-import type { Root } from "mdast"
-
 import { parseTextFile } from "./app/parsers/parse-text-file"
 import { parseOrdoFile } from "./app/parsers/parse-ordo-file"
 import { OrdoFile } from "./app/types"
 import { getFileType } from "./get-file-type"
 import Switch from "./utils/switch"
+import { Root } from "@client/editor/types"
 
 export const getFileParser = (file: OrdoFile): ((raw: string) => Root) => {
   const type = getFileType(file)

@@ -1,4 +1,3 @@
-import type { Root } from "mdast"
 import type { Nullable } from "@core/types"
 
 import React, { useEffect, useState } from "react"
@@ -13,6 +12,13 @@ import BlockNode from "@client/editor/components/block-node"
 import "@client/editor/index.css"
 import { CaretRangeDirection } from "./constants"
 import { useHotkeys } from "react-hotkeys-hook"
+import {
+  handleArrowDown,
+  handleArrowLeft,
+  handleArrowRight,
+  handleArrowUp,
+} from "./key-handlers/arrows"
+import { Root } from "./types"
 
 const initialCaretRanges = [
   {
@@ -25,7 +31,7 @@ const initialCaretRanges = [
 export default function Editor() {
   const [raw, setRaw] = useState("")
   const [parsedFile, setParsedFile] = useState<Nullable<Root>>(null)
-  const [parse, setParse] = useState<(raw: string) => Nullable<Root>>(() => null)
+  const [parse, setParse] = useState<(raw: string) => Nullable<Root>>(() => () => null)
   const [caretRanges, setCaretRanges] = useState([
     {
       start: { line: 1, column: 0 },
@@ -50,27 +56,41 @@ export default function Editor() {
     setCaretRanges(initialCaretRanges)
   }, [currentFileRaw])
 
-  useHotkeys("down", () => {
-    const caretRangesCopy = [...caretRanges]
+  useHotkeys(
+    "down",
+    (e) => {
+      e.preventDefault()
+      if (parsedFile) setCaretRanges(handleArrowDown(caretRanges, parsedFile))
+    },
+    [parsedFile, caretRanges]
+  )
 
-    // TODO: validate if caret can go down further
-    caretRangesCopy.forEach((range) => {
-      range.start.line += 1
-    })
+  useHotkeys(
+    "up",
+    (event) => {
+      event.preventDefault()
+      if (parsedFile) setCaretRanges(handleArrowUp(caretRanges, parsedFile))
+    },
+    [parsedFile, caretRanges]
+  )
 
-    setCaretRanges(caretRangesCopy)
-  })
+  useHotkeys(
+    "left",
+    (e) => {
+      e.preventDefault()
+      if (parsedFile) setCaretRanges(handleArrowLeft(caretRanges, parsedFile))
+    },
+    [parsedFile, caretRanges]
+  )
 
-  useHotkeys("up", () => {
-    const caretRangesCopy = [...caretRanges]
-
-    // TODO: validate if caret can go up further
-    caretRangesCopy.forEach((range) => {
-      range.start.line -= 1
-    })
-
-    setCaretRanges(caretRangesCopy)
-  })
+  useHotkeys(
+    "right",
+    (e) => {
+      e.preventDefault()
+      if (parsedFile) setCaretRanges(handleArrowRight(caretRanges, parsedFile))
+    },
+    [parsedFile, caretRanges]
+  )
 
   return Either.fromNullable(parsedFile)
     .chain((file) => Either.fromNullable(file.children))

@@ -1,6 +1,6 @@
-import type { Root, Paragraph } from "mdast"
+import { Line, Root } from "@client/editor/types"
 
-export const createRoot = (raw: string) => {
+export const createRoot = (raw: string): Root => {
   const root: Root = {
     type: "root",
     data: {
@@ -20,8 +20,8 @@ export const createRoot = (raw: string) => {
 
     const end = { line: index + 1, column: line.length + 1, offset }
 
-    const lineNode: Paragraph = {
-      type: "paragraph",
+    const lineNode: Line = {
+      type: "line",
       data: { raw: line },
       position: { start, end },
       children: [{ type: "text", position: { start, end }, value: line }],

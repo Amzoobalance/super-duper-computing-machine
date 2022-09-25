@@ -1,8 +1,8 @@
-import type { Root } from "mdast"
+import { Root } from "@client/editor/types"
 import { visit } from "unist-util-visit"
 import { createRoot } from "./create-root"
 
-export const parseOrdoFile = (raw: string) => {
+export const parseOrdoFile = (raw: string): Root => {
   const root = createRoot(raw)
 
   return root
