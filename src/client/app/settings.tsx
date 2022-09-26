@@ -1,7 +1,6 @@
-import React, { useEffect } from "react"
+import React from "react"
 
-import { useAppDispatch, useAppSelector } from "@client/state"
-import { getLocalSettings, getUserSettings } from "@client/app/store"
+import { useAppSelector } from "@client/state"
 import { USER_SETTINGS_SCHEMA } from "@core/app/user-settings-schema"
 import Either from "@core/utils/either"
 
@@ -12,16 +11,10 @@ import Null from "@client/null"
  * Application settings page.
  */
 export default function Settings() {
-  const dispatch = useAppDispatch()
   const userSettings = useAppSelector((state) => state.app.userSettings)
 
   // TODO: Disallow opening sidebar
   const schemaKeys = Object.keys(USER_SETTINGS_SCHEMA) as (keyof typeof USER_SETTINGS_SCHEMA)[]
-
-  useEffect(() => {
-    dispatch(getUserSettings())
-    dispatch(getLocalSettings())
-  }, [])
 
   return Either.fromNullable(userSettings).fold(Null, (settings) => (
     <div className="settings">

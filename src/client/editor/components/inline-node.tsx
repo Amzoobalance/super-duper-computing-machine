@@ -1,5 +1,3 @@
-import type { PhrasingContent } from "mdast"
-
 import React, { useState, useEffect, Dispatch, SetStateAction } from "react"
 import { CaretRange, TextNode } from "../types"
 import Caret from "./caret"

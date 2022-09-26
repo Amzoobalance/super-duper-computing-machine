@@ -5,6 +5,7 @@ import React from "react"
 import { useIcon } from "@client/use-icon"
 import { useAppDispatch } from "@client/state"
 import { openFile } from "@client/app/store"
+import { selectActivity } from "@client/activity-bar/store"
 
 type Props = {
   item: OrdoFile
@@ -17,7 +18,10 @@ export default function File({ item }: Props) {
 
   const paddingLeft = `${(item.depth + 5) * 2}px`
 
-  const handleClick = () => dispatch(openFile(item))
+  const handleClick = () => {
+    dispatch(selectActivity("editor"))
+    dispatch(openFile(item))
+  }
 
   return (
     <div
