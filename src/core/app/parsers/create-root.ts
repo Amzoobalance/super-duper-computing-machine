@@ -1,7 +1,7 @@
-import { Line, Root } from "@client/editor/types"
+import { LineNode, RootNode } from "@client/editor/types"
 
-export const createRoot = (raw: string): Root => {
-  const root: Root = {
+export const createRoot = (raw: string): RootNode => {
+  const root: RootNode = {
     type: "root",
     data: {
       raw,
@@ -20,7 +20,7 @@ export const createRoot = (raw: string): Root => {
 
     const end = { line: index + 1, column: line.length + 1, offset }
 
-    const lineNode: Line = {
+    const lineNode: LineNode = {
       type: "line",
       data: { raw: line },
       position: { start, end },

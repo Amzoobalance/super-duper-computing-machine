@@ -1,26 +1,26 @@
-import { Root } from "@client/editor/types"
+import { RootNode } from "@client/editor/types"
 import { visit } from "unist-util-visit"
 import { createRoot } from "./create-root"
 
-export const parseOrdoFile = (raw: string): Root => {
+export const parseOrdoFile = (raw: string): RootNode => {
   const root = createRoot(raw)
 
   return root
 }
 
-const extractTags = () => (tree: Root) =>
+const extractTags = () => (tree: RootNode) =>
   visit(tree, "text", (node, index, parent) => {
     // TODO Extract tags (they start with --)
     // @example --my-tag --work/to-do
   })
 
-const extractToDos = () => (tree: Root) =>
+const extractToDos = () => (tree: RootNode) =>
   visit(tree, "text", (node, index, parent) => {
     // TODO Extract to dos (they start at line start with ( ) - unchecked or (*) - checked)
     // @example |( ) Wash the dishes, |(*) Play WoW all night
   })
 
-const extractLinks = () => (tree: Root) =>
+const extractLinks = () => (tree: RootNode) =>
   visit(tree, "text", (node, index, parent) => {
     // TODO Extract links (they are wrapped with (()))
     // @example ((folder/another-file.mdo)), ((photos/2022/img.png))
@@ -28,7 +28,7 @@ const extractLinks = () => (tree: Root) =>
     // @example !((folder/another-file.mdo))
   })
 
-const extractDates = () => (tree: Root) =>
+const extractDates = () => (tree: RootNode) =>
   visit(tree, "text", (node, index, parent) => {
     // TODO Extract dates (they look like !ISO_date--cron_pattern?--ISO_end_date or !(ISO_date_reminder--cron_pattern?--ISO_end_date))
     // @example !2022-09-25, !2022-09-25T09:03:47.133Z

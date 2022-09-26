@@ -3,9 +3,9 @@ import { parseOrdoFile } from "./app/parsers/parse-ordo-file"
 import { OrdoFile } from "./app/types"
 import { getFileType } from "./get-file-type"
 import Switch from "./utils/switch"
-import { Root } from "@client/editor/types"
+import { RootNode } from "@client/editor/types"
 
-export const getFileParser = (file: OrdoFile): ((raw: string) => Root) => {
+export const getFileParser = (file: OrdoFile): ((raw: string) => RootNode) => {
   const type = getFileType(file)
 
   return Switch.of(type)

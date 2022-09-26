@@ -1,4 +1,3 @@
-import { PhrasingContent } from "mdast"
 import { CaretRangeDirection } from "./constants"
 
 export type CaretPosition = {
@@ -17,15 +16,21 @@ export type LinePosition = {
   end: CaretPosition & { indent?: boolean }
 }
 
-export type Line = {
+export type TextNode = {
+  type: "text"
+  position: LinePosition
+  value: string
+}
+
+export type LineNode = {
   type: "line"
   data: { raw: string }
   position: LinePosition
-  children: PhrasingContent[]
+  children: TextNode[]
 }
 
-export type Root = {
+export type RootNode = {
   type: "root"
   data: { raw: string }
-  children: Line[]
+  children: LineNode[]
 }

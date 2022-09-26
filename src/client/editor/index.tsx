@@ -1,6 +1,6 @@
 import type { Nullable } from "@core/types"
 
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useCallback, MouseEvent } from "react"
 
 import { useAppSelector } from "@client/state"
 import { getFileParser } from "@core/get-file-parser"
@@ -18,7 +18,10 @@ import {
   handleArrowRight,
   handleArrowUp,
 } from "./key-handlers/arrows"
-import { Root } from "./types"
+import { RootNode } from "./types"
+import { noOp } from "@core/utils/no-op"
+import { preventDefault } from "@core/utils/event"
+import Line from "./components/line"
 
 const initialCaretRanges = [
   {
@@ -30,15 +33,9 @@ const initialCaretRanges = [
 
 export default function Editor() {
   const [raw, setRaw] = useState("")
-  const [parsedFile, setParsedFile] = useState<Nullable<Root>>(null)
-  const [parse, setParse] = useState<(raw: string) => Nullable<Root>>(() => () => null)
-  const [caretRanges, setCaretRanges] = useState([
-    {
-      start: { line: 1, column: 0 },
-      end: { line: 1, column: 0 },
-      direction: CaretRangeDirection.LEFT_TO_RIGHT,
-    },
-  ])
+  const [parsedFile, setParsedFile] = useState<Nullable<RootNode>>(null)
+  const [parse, setParse] = useState<(raw: string) => Nullable<RootNode>>(() => () => null)
+  const [caretRanges, setCaretRanges] = useState(initialCaretRanges)
 
   const currentFileRaw = useAppSelector((state) => state.app.currentFileRaw)
   const currentFile = useAppSelector((state) => state.app.currentFile)
@@ -56,51 +53,80 @@ export default function Editor() {
     setCaretRanges(initialCaretRanges)
   }, [currentFileRaw])
 
-  useHotkeys(
-    "down",
-    (e) => {
-      e.preventDefault()
-      if (parsedFile) setCaretRanges(handleArrowDown(caretRanges, parsedFile))
-    },
+  const onArrowDown = useCallback(
+    (event: Event) =>
+      Either.of(event)
+        .map(preventDefault)
+        .chain(() => Either.fromNullable(parsedFile))
+        .map(handleArrowDown(caretRanges))
+        .fold(noOp, setCaretRanges),
     [parsedFile, caretRanges]
   )
 
-  useHotkeys(
-    "up",
-    (event) => {
-      event.preventDefault()
-      if (parsedFile) setCaretRanges(handleArrowUp(caretRanges, parsedFile))
-    },
+  const onArrowUp = useCallback(
+    (event: Event) =>
+      Either.of(event)
+        .map(preventDefault)
+        .chain(() => Either.fromNullable(parsedFile))
+        .map(handleArrowUp(caretRanges))
+        .fold(noOp, setCaretRanges),
     [parsedFile, caretRanges]
   )
 
-  useHotkeys(
-    "left",
-    (e) => {
-      e.preventDefault()
-      if (parsedFile) setCaretRanges(handleArrowLeft(caretRanges, parsedFile))
-    },
+  const onArrowLeft = useCallback(
+    (event: Event) =>
+      Either.of(event)
+        .map(preventDefault)
+        .chain(() => Either.fromNullable(parsedFile))
+        .map(handleArrowLeft(caretRanges))
+        .fold(noOp, setCaretRanges),
     [parsedFile, caretRanges]
   )
 
-  useHotkeys(
-    "right",
-    (e) => {
-      e.preventDefault()
-      if (parsedFile) setCaretRanges(handleArrowRight(caretRanges, parsedFile))
-    },
+  const onArrowRight = useCallback(
+    (event: Event) =>
+      Either.of(event)
+        .map(preventDefault)
+        .chain(() => Either.fromNullable(parsedFile))
+        .map(handleArrowRight(caretRanges))
+        .fold(noOp, setCaretRanges),
     [parsedFile, caretRanges]
   )
+
+  useHotkeys("down", onArrowDown, [parsedFile, caretRanges])
+  useHotkeys("up", onArrowUp, [parsedFile, caretRanges])
+  useHotkeys("left", onArrowLeft, [parsedFile, caretRanges])
+  useHotkeys("right", onArrowRight, [parsedFile, caretRanges])
+
+  const handleClick = (event: MouseEvent) => {
+    if (!parsedFile) return
+
+    event.preventDefault()
+    event.stopPropagation()
+
+    const lastLineIndex = parsedFile.children.length - 1
+    const column = parsedFile.children[lastLineIndex].position.end.column - 1
+    const line = lastLineIndex + 1
+
+    setCaretRanges([
+      {
+        start: { line, column },
+        end: { line, column },
+        direction: CaretRangeDirection.LEFT_TO_RIGHT,
+      },
+    ])
+  }
 
   return Either.fromNullable(parsedFile)
     .chain((file) => Either.fromNullable(file.children))
     .fold(Null, (children) => (
-      <div>
+      <div className="cursor-text h-full" onClick={handleClick}>
         {children.map((node) => (
-          <BlockNode
-            node={node}
-            caretRanges={caretRanges}
+          <Line
             key={`${node.position?.start.line}-${node.position?.start.column}-${node.position?.end.line}-${node.position?.end.column}`}
+            caretRanges={caretRanges}
+            setCaretRanges={setCaretRanges}
+            node={node}
           />
         ))}
       </div>

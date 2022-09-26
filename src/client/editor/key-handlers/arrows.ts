@@ -1,6 +1,6 @@
-import { CaretRange, Root } from "../types"
+import { CaretRange, RootNode } from "../types"
 
-export const handleArrowUp = (caretRanges: CaretRange[], root: Root) => {
+export const handleArrowUp = (caretRanges: CaretRange[]) => (root: RootNode) => {
   const ranges = [...caretRanges]
 
   ranges.forEach((range) => {
@@ -39,7 +39,7 @@ export const handleArrowUp = (caretRanges: CaretRange[], root: Root) => {
   return ranges
 }
 
-export const handleArrowDown = (caretRanges: CaretRange[], root: Root) => {
+export const handleArrowDown = (caretRanges: CaretRange[]) => (root: RootNode) => {
   const ranges = [...caretRanges]
 
   ranges.forEach((range) => {
@@ -70,7 +70,7 @@ export const handleArrowDown = (caretRanges: CaretRange[], root: Root) => {
   return ranges
 }
 
-export const handleArrowLeft = (caretRanges: CaretRange[], root: Root) => {
+export const handleArrowLeft = (caretRanges: CaretRange[]) => (root: RootNode) => {
   const ranges = [...caretRanges]
 
   ranges.forEach((range) => {
@@ -99,7 +99,7 @@ export const handleArrowLeft = (caretRanges: CaretRange[], root: Root) => {
   return ranges
 }
 
-export const handleArrowRight = (caretRanges: CaretRange[], root: Root) => {
+export const handleArrowRight = (caretRanges: CaretRange[]) => (root: RootNode) => {
   const ranges = [...caretRanges]
 
   ranges.forEach((range) => {

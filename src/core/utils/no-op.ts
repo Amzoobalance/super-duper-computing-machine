@@ -1,3 +1,3 @@
-import type { UnaryFn } from "@core/types"
+import type { Thunk } from "@core/types"
 
-export const noOp: UnaryFn<[...unknown[]], void> = () => void 0
+export const noOp: Thunk<void> = () => void 0
