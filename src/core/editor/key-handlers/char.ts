@@ -1,7 +1,7 @@
-import type { CaretRange, RootNode } from "../types"
+import type { CaretRange, RootNode } from "../../../client/editor/types"
 
 import { getCharIndex } from "@core/editor/get-char-index"
-import { CaretRangeDirection } from "../../../core/editor/constants"
+import { CaretRangeDirection } from "../constants"
 
 export const handleChar =
   (caretRanges: CaretRange[], char: string) =>

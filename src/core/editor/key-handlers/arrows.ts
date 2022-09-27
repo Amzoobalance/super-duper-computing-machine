@@ -1,4 +1,4 @@
-import { CaretRange, RootNode } from "../types"
+import { CaretRange, RootNode } from "../../../client/editor/types"
 
 export const handleArrowUp = (caretRanges: CaretRange[]) => (root: RootNode) => {
   const ranges = [...caretRanges]

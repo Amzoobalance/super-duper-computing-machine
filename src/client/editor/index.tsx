@@ -11,23 +11,23 @@ import Null from "@client/null"
 import "@client/editor/index.css"
 import { CaretRangeDirection } from "../../core/editor/constants"
 import { useHotkeys } from "react-hotkeys-hook"
-import {
-  handleArrowDown,
-  handleArrowLeft,
-  handleArrowRight,
-  handleArrowUp,
-} from "./key-handlers/arrows"
-import { RootNode } from "./types"
 import { noOp } from "@core/utils/no-op"
 import { preventDefault } from "@core/utils/event"
 import Line from "./components/line"
-import { handleEnter } from "./key-handlers/enter"
-import { handleBackspace } from "./key-handlers/backspace"
-import { handleDelete } from "./key-handlers/delete"
 import Switch from "@core/utils/switch"
-import { handleChar } from "./key-handlers/char"
-import { IsKey } from "@core/editor/editor-keys"
 import { initialCaretRanges } from "@core/editor/initial-caret-ranges"
+import {
+  handleArrowDown,
+  handleArrowUp,
+  handleArrowLeft,
+  handleArrowRight,
+} from "@core/editor/key-handlers/arrows"
+import { handleBackspace } from "@core/editor/key-handlers/backspace"
+import { handleChar } from "@core/editor/key-handlers/char"
+import { handleDelete } from "@core/editor/key-handlers/delete"
+import { handleEnter } from "@core/editor/key-handlers/enter"
+import { RootNode } from "@core/editor/types"
+import { IsKey } from "@core/editor/is-key"
 
 export default function Editor() {
   const [raw, setRaw] = useState("")
@@ -109,33 +109,31 @@ export default function Editor() {
         setRaw(raw)
       })
 
-  const onChar = (event: KeyboardEvent) => {
-    if (!parsedFile) return
-
-    event.preventDefault()
-
-    console.log(event)
-
-    const char = event.shiftKey ? event.key.toLocaleUpperCase() : event.key
-
-    const handleFile = handleChar(caretRanges, char)
-
-    const { ranges, raw } = handleFile(parsedFile)
-
-    setRaw(raw)
-    setCaretRanges(ranges)
-  }
+  const onChar = (event: KeyboardEvent) =>
+    Either.of(event)
+      .map(preventDefault)
+      .chain(() => Either.fromNullable(parsedFile))
+      .chain((file) =>
+        Either.fromBoolean(event.key.length === 1)
+          .map(() => (event.shiftKey ? event.key.toLocaleUpperCase() : event.key))
+          .map((char) => handleChar(caretRanges, char))
+          .map((handleFile) => handleFile(file))
+      )
+      .fold(noOp, ({ ranges, raw }) => {
+        setRaw(raw)
+        setCaretRanges(ranges)
+      })
 
   // TODO: shiftArrows, ctrlArrows, ctrlBackspace, ctrlDelete
-  // TODO: ctrl+click for more carets
-  // TODO: shift+click for mouse selection
-  // TODO: mousedown+mouseup for mouse selection
+  // TODO: ctrl+click for adding a caret at click point
+  // TODO: shift+click for mouse selection from range to click point
+  // TODO: mousedown+mouseup for mouse selection from mousedown point to mouseup point
   // TODO: ctrl+a
   // TODO: ctrl+x, ctrl+c, ctrl+v
   // TODO: ctrl+z, ctrl+shift+z
   // BUG: When typing very quickly (basically, rolling over the keyboard) some characters are lost
   // but the caret position is updated properly. This leads to losing caret visually. Maybe debouncing
-  // `onChar` to, like, 50ms would help?
+  // `onChar` would help?
   useHotkeys(
     "*",
     (event) => {
