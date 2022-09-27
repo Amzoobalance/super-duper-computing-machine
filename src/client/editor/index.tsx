@@ -1,16 +1,15 @@
 import type { Nullable } from "@core/types"
 
-import React, { useEffect, useState, useCallback, MouseEvent } from "react"
+import React, { useEffect, useState, MouseEvent } from "react"
 
 import { useAppSelector } from "@client/state"
 import { getFileParser } from "@core/get-file-parser"
 import Either from "@core/utils/either"
 
 import Null from "@client/null"
-import BlockNode from "@client/editor/components/block-node"
 
 import "@client/editor/index.css"
-import { CaretRangeDirection } from "./constants"
+import { CaretRangeDirection } from "../../core/editor/constants"
 import { useHotkeys } from "react-hotkeys-hook"
 import {
   handleArrowDown,
@@ -22,19 +21,18 @@ import { RootNode } from "./types"
 import { noOp } from "@core/utils/no-op"
 import { preventDefault } from "@core/utils/event"
 import Line from "./components/line"
-
-const initialCaretRanges = [
-  {
-    start: { line: 1, column: 0 },
-    end: { line: 1, column: 0 },
-    direction: CaretRangeDirection.LEFT_TO_RIGHT,
-  },
-]
+import { handleEnter } from "./key-handlers/enter"
+import { handleBackspace } from "./key-handlers/backspace"
+import { handleDelete } from "./key-handlers/delete"
+import Switch from "@core/utils/switch"
+import { handleChar } from "./key-handlers/char"
+import { EditorKeys } from "@core/editor/editor-keys"
+import { initialCaretRanges } from "@core/editor/initial-caret-ranges"
 
 export default function Editor() {
   const [raw, setRaw] = useState("")
   const [parsedFile, setParsedFile] = useState<Nullable<RootNode>>(null)
-  const [parse, setParse] = useState<(raw: string) => Nullable<RootNode>>(() => () => null)
+  const [parse, setParse] = useState<(raw: string) => Nullable<RootNode>>(() => null)
   const [caretRanges, setCaretRanges] = useState(initialCaretRanges)
 
   const currentFileRaw = useAppSelector((state) => state.app.currentFileRaw)
@@ -53,50 +51,97 @@ export default function Editor() {
     setCaretRanges(initialCaretRanges)
   }, [currentFileRaw])
 
-  const onArrowDown = useCallback(
-    (event: Event) =>
-      Either.of(event)
-        .map(preventDefault)
-        .chain(() => Either.fromNullable(parsedFile))
-        .map(handleArrowDown(caretRanges))
-        .fold(noOp, setCaretRanges),
+  const onArrowDown = (event: Event) =>
+    Either.of(event)
+      .map(preventDefault)
+      .chain(() => Either.fromNullable(parsedFile))
+      .map(handleArrowDown(caretRanges))
+      .fold(noOp, setCaretRanges)
+
+  const onArrowUp = (event: Event) =>
+    Either.of(event)
+      .map(preventDefault)
+      .chain(() => Either.fromNullable(parsedFile))
+      .map(handleArrowUp(caretRanges))
+      .fold(noOp, setCaretRanges)
+
+  const onArrowLeft = (event: Event) =>
+    Either.of(event)
+      .map(preventDefault)
+      .chain(() => Either.fromNullable(parsedFile))
+      .map(handleArrowLeft(caretRanges))
+      .fold(noOp, setCaretRanges)
+
+  const onArrowRight = (event: Event) =>
+    Either.of(event)
+      .map(preventDefault)
+      .chain(() => Either.fromNullable(parsedFile))
+      .map(handleArrowRight(caretRanges))
+      .fold(noOp, setCaretRanges)
+
+  const onEnter = (event: Event) =>
+    Either.of(event)
+      .map(preventDefault)
+      .chain(() => Either.fromNullable(parsedFile))
+      .map(handleEnter(caretRanges))
+      .fold(noOp, ({ ranges, raw }) => {
+        setCaretRanges(ranges)
+        setRaw(raw)
+      })
+
+  const onBackspace = (event: Event) =>
+    Either.of(event)
+      .map(preventDefault)
+      .chain(() => Either.fromNullable(parsedFile))
+      .map(handleBackspace(caretRanges))
+      .fold(noOp, ({ ranges, raw }) => {
+        setCaretRanges(ranges)
+        setRaw(raw)
+      })
+
+  const onDelete = (event: Event) =>
+    Either.of(event)
+      .map(preventDefault)
+      .chain(() => Either.fromNullable(parsedFile))
+      .map(handleDelete(caretRanges))
+      .fold(noOp, ({ ranges, raw }) => {
+        setCaretRanges(ranges)
+        setRaw(raw)
+      })
+
+  const onChar = (event: KeyboardEvent) =>
+    Either.of(event)
+      .map(preventDefault)
+      .chain(() => Either.fromNullable(parsedFile))
+      .chain((file) =>
+        Either.fromBoolean(event.key.length === 1)
+          .map(() => (event.shiftKey ? event.key.toLocaleUpperCase() : event.key))
+          .map((char) => handleChar(caretRanges, char))
+          .map((handleFile) => handleFile(file))
+      )
+      .fold(noOp, ({ ranges, raw }) => {
+        setCaretRanges(ranges)
+        setRaw(raw)
+      })
+
+  useHotkeys(
+    "*",
+    (event) => {
+      const handle = Switch.of(event)
+        .case(EditorKeys.backspace, onBackspace)
+        .case(EditorKeys.delete, onDelete)
+        .case(EditorKeys.enter, onEnter)
+        .case(EditorKeys.arrowLeft, onArrowLeft)
+        .case(EditorKeys.arrowRight, onArrowRight)
+        .case(EditorKeys.arrowUp, onArrowUp)
+        .case(EditorKeys.arrowDown, onArrowDown)
+        .case(EditorKeys.char, onChar)
+        .default(noOp)
+
+      handle(event)
+    },
     [parsedFile, caretRanges]
   )
-
-  const onArrowUp = useCallback(
-    (event: Event) =>
-      Either.of(event)
-        .map(preventDefault)
-        .chain(() => Either.fromNullable(parsedFile))
-        .map(handleArrowUp(caretRanges))
-        .fold(noOp, setCaretRanges),
-    [parsedFile, caretRanges]
-  )
-
-  const onArrowLeft = useCallback(
-    (event: Event) =>
-      Either.of(event)
-        .map(preventDefault)
-        .chain(() => Either.fromNullable(parsedFile))
-        .map(handleArrowLeft(caretRanges))
-        .fold(noOp, setCaretRanges),
-    [parsedFile, caretRanges]
-  )
-
-  const onArrowRight = useCallback(
-    (event: Event) =>
-      Either.of(event)
-        .map(preventDefault)
-        .chain(() => Either.fromNullable(parsedFile))
-        .map(handleArrowRight(caretRanges))
-        .fold(noOp, setCaretRanges),
-    [parsedFile, caretRanges]
-  )
-
-  useHotkeys("down", onArrowDown, [parsedFile, caretRanges])
-  useHotkeys("up", onArrowUp, [parsedFile, caretRanges])
-  useHotkeys("left", onArrowLeft, [parsedFile, caretRanges])
-  useHotkeys("right", onArrowRight, [parsedFile, caretRanges])
 
   const handleClick = (event: MouseEvent) => {
     if (!parsedFile) return

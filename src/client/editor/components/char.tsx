@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Dispatch, SetStateAction, MouseEvent } from "react"
-import { CaretRangeDirection } from "../constants"
+import { CaretRangeDirection } from "../../../core/editor/constants"
 import { CaretRange, TextNode } from "../types"
 import Caret from "./caret"
 
