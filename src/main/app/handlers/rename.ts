@@ -12,6 +12,7 @@ export const handleRename = async ({ oldPath, newPath }: Params) => {
   const rootPath = userSettingsStore.get("project.personal.directory")
 
   // TODO: Show message dialog if user setting requires so
+  // TODO: Reopen file if it was opened when renamed
 
   const oldPathIsOrdoFile = oldPath.endsWith(ORDO_FILE_EXTENSION)
   const newPathIsOrdoFile = newPath.endsWith(ORDO_FILE_EXTENSION)

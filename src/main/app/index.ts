@@ -2,6 +2,7 @@ import LocalSettingsStore from "@main/app/local-settings-store"
 import UserSettingsStore from "@main/app/user-settings-store"
 import { handleSelectPersonalProjectDirectory } from "@main/app/handlers/select-personal-project-directory"
 import { handleSetUserSetting } from "@main/app/handlers/set-user-setting"
+import { handleCreateFolder } from "@main/app/handlers/create-folder"
 import { registerMainHandlers } from "@main/register-main-handlers"
 import { handleListFolder } from "@main/app/handlers/list-folder"
 import { handleCreateFile } from "@main/app/handlers/create-file"
@@ -13,8 +14,9 @@ export default registerMainHandlers({
   "@app/rename": handleRename,
   "@app/delete": handleDelete,
   "@app/openFile": handleOpenFile,
-  "@app/createFile": handleCreateFile,
   "@app/listFolder": handleListFolder,
+  "@app/createFile": handleCreateFile,
+  "@app/createFolder": handleCreateFolder,
   "@app/setUserSetting": handleSetUserSetting,
   "@app/setLocalSetting": handleSetUserSetting,
   "@app/getUserSettings": () => UserSettingsStore.store,

@@ -72,5 +72,6 @@ export type LocalSettings = {
   "window.height": number
   "side-bar.width": number
   "file-explorer.expanded-folders": string[]
+  "app.separator": string
   // "project.external.directories": string[]
 }

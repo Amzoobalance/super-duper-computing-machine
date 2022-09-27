@@ -1,30 +1,49 @@
 import { ORDO_FILE_EXTENSION, ORDO_METADATA_EXTENSION } from "@core/app/constants"
-import { createOrdoFile } from "../create-ordo-file"
 
 import { promises } from "fs"
+import localSettingsStore from "../local-settings-store"
+import { handleListFolder } from "./list-folder"
+import userSettingsStore from "../user-settings-store"
 
 export const handleCreateFile = async (path: string) => {
-  const creationDate = new Date()
+  const separator = localSettingsStore.get("app.separator")
+  const rootPath = userSettingsStore.get("project.personal.directory")
 
-  const file = createOrdoFile({
-    path,
-    createdAt: creationDate,
-    updatedAt: creationDate,
-    accessedAt: creationDate,
-    depth: 0,
-    relativePath: "",
-    size: 0,
-  })
+  const windowsSeparator = "\\"
 
-  const filePath = file.extension ? file.path : file.path + ORDO_FILE_EXTENSION
+  const isWindowsSeparator = separator === windowsSeparator
+
+  if (isWindowsSeparator && ~path.indexOf("/")) {
+    path = path.replaceAll("/", windowsSeparator)
+  }
+
+  if (~path.indexOf(windowsSeparator)) {
+    const parent = path.slice(0, path.lastIndexOf(windowsSeparator))
+
+    await promises.mkdir(parent, { recursive: true })
+  }
+
+  if (path.endsWith(windowsSeparator)) {
+    return handleListFolder(rootPath)
+  }
+
+  const lastDot = path.lastIndexOf(".")
+  const extension = path.slice(~lastDot ? lastDot : 0)
+  const hasValidExtension = Boolean(extension) && !~extension.indexOf(separator)
+
+  const filePath = hasValidExtension ? path : path + ORDO_FILE_EXTENSION
   const writeFile = () => promises.writeFile(filePath, "\n", "utf8")
+
+  // TODO: Open file after creation
 
   // TODO: Add encryption option and encryption support
   if (filePath.endsWith(ORDO_FILE_EXTENSION)) {
-    const metadataPath = file.path + ORDO_METADATA_EXTENSION
+    const metadataPath = filePath + ORDO_METADATA_EXTENSION
 
-    return Promise.all([promises.writeFile(metadataPath, "{}", "utf8"), writeFile()])
+    await Promise.all([promises.writeFile(metadataPath, "{}", "utf8"), writeFile()])
+  } else {
+    await writeFile()
   }
 
-  return writeFile()
+  return handleListFolder(rootPath)
 }

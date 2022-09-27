@@ -41,7 +41,11 @@ export const openFile = createAsyncThunk("@app/openFile", (payload: OrdoFile) =>
 )
 
 export const createFile = createAsyncThunk("@app/createFile", (payload: string) =>
-  window.ordo.emit<void, string>({ type: "@app/createFile", payload })
+  window.ordo.emit<OrdoFolder, string>({ type: "@app/createFile", payload })
+)
+
+export const createFolder = createAsyncThunk("@app/createFolder", (payload: string) =>
+  window.ordo.emit<OrdoFolder, string>({ type: "@app/createFolder", payload })
 )
 
 export const deleteFileOrFolder = createAsyncThunk("@app/delete", (payload: string) =>
@@ -102,6 +106,12 @@ export const appSlice = createSlice({
         state.personalDirectory = action.payload
       })
       .addCase(renameFileOrFolder.fulfilled, (state, action) => {
+        state.personalDirectory = action.payload
+      })
+      .addCase(createFolder.fulfilled, (state, action) => {
+        state.personalDirectory = action.payload
+      })
+      .addCase(createFile.fulfilled, (state, action) => {
         state.personalDirectory = action.payload
       })
   },

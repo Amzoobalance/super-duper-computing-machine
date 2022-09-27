@@ -10,6 +10,9 @@ import FileOrFolder from "./file-or-folder"
 import { useContextMenu } from "@client/context-menu"
 import { useAppDispatch } from "@client/state"
 import { deleteFileOrFolder, listFolder } from "@client/app/store"
+import { useRenameModal } from "../rename-modal"
+import { SEPARATOR } from "@client/context-menu/constants"
+import { useCreateFileModal, useCreateFolderModal } from "../create-modal"
 
 type Props = {
   item: OrdoFolder
@@ -35,38 +38,42 @@ export default function Directory({ item }: Props) {
 
   const handleChevronClick = () => setIsExpanded((value) => !value)
 
+  const { showRenameModal, RenameModal } = useRenameModal(item)
+  const { showCreateFileModal, CreateFileModal } = useCreateFileModal({ parent: item })
+  const { showCreateFolderModal, CreateFolderModal } = useCreateFolderModal({ parent: item })
+
   const { showContextMenu, ContextMenu } = useContextMenu({
     children: [
       {
         title: "app.file.rename",
         icon: "BsPencilSquare",
-        action: () => console.log("TODO"),
+        action: showRenameModal,
       },
       {
         title: "app.file.duplicate",
         icon: "BsFiles",
         action: () => console.log("TODO"),
       },
-      { title: "separator" },
+      SEPARATOR,
       {
         title: "app.folder.create-file",
         icon: "BsFilePlus",
-        action: () => console.log("TODO"),
+        action: showCreateFileModal,
         accelerator: "CommandOrControl+N",
       },
       {
         title: "app.folder.create-folder",
         icon: "BsFolderPlus",
-        action: () => console.log("TODO"),
+        action: showCreateFolderModal,
         accelerator: "CommandOrControl+Shift+N",
       },
-      { title: "separator" },
+      SEPARATOR,
       {
         title: "app.file.delete",
         icon: "BsTrash",
         action: () => dispatch(deleteFileOrFolder(item.path)),
       },
-      { title: "separator" },
+      SEPARATOR,
       {
         title: "app.file.copy-path",
         icon: "BsSignpost2",
@@ -108,6 +115,9 @@ export default function Directory({ item }: Props) {
         )}
       </div>
       <ContextMenu />
+      <RenameModal />
+      <CreateFileModal />
+      <CreateFolderModal />
     </div>
   )
 }

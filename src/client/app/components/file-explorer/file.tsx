@@ -1,14 +1,15 @@
 import type { OrdoFile } from "@core/app/types"
 
-import React, { useState } from "react"
+import React from "react"
 
-import { useIcon } from "@client/use-icon"
-import { useAppDispatch, useAppSelector } from "@client/state"
-import { deleteFileOrFolder, openFile, renameFileOrFolder } from "@client/app/store"
+import { deleteFileOrFolder, openFile } from "@client/app/store"
 import { selectActivity } from "@client/activity-bar/store"
+import { useRenameModal } from "@client/app/components/rename-modal"
+import { useAppDispatch, useAppSelector } from "@client/state"
 import { useContextMenu } from "@client/context-menu"
-import { useModalWindow } from "@client/app/modal"
-import { useTranslation } from "react-i18next"
+import { useIcon } from "@client/use-icon"
+import { SEPARATOR } from "@client/context-menu/constants"
+import { ORDO_FILE_EXTENSION } from "@core/app/constants"
 
 type Props = {
   item: OrdoFile
@@ -16,32 +17,32 @@ type Props = {
 
 export default function File({ item }: Props) {
   const dispatch = useAppDispatch()
-  const { t } = useTranslation()
-
-  const [newFileName, setNewFileName] = useState(item.readableName)
 
   const currentFile = useAppSelector((state) => state.app.currentFile)
-  const { showModal, hideModal, Modal } = useModalWindow()
+  const { showRenameModal, RenameModal } = useRenameModal(item)
+  const Icon = useIcon(
+    item.extension === ORDO_FILE_EXTENSION ? "BsFileEarmarkText" : "BsFileEarmarkArrowDown"
+  )
 
   const { showContextMenu, ContextMenu } = useContextMenu({
     children: [
       {
         title: "app.file.rename",
         icon: "BsPencilSquare",
-        action: () => showModal(),
+        action: showRenameModal,
       },
       {
         title: "app.file.duplicate",
         icon: "BsFiles",
         action: () => console.log("TODO"),
       },
-      { title: "separator" },
+      SEPARATOR,
       {
         title: "app.file.delete",
         icon: "BsTrash",
         action: () => dispatch(deleteFileOrFolder(item.path)),
       },
-      { title: "separator" },
+      SEPARATOR,
       {
         title: "app.file.copy-path",
         icon: "BsSignpost2",
@@ -61,8 +62,6 @@ export default function File({ item }: Props) {
       },
     ],
   })
-
-  const Icon = useIcon("BsFileEarmarkText")
 
   const paddingLeft = `${(item.depth + 5) * 2}px`
 
@@ -88,33 +87,7 @@ export default function File({ item }: Props) {
         <ContextMenu />
       </div>
 
-      <Modal>
-        <div className="h-full flex items-center justify-center">
-          <div
-            onClick={(event) => event.stopPropagation()}
-            className="bg-neutral-100 dark:bg-neutral-700 shadow-xl rounded-md w-full max-w-lg p-8 flex flex-col space-y-4 items-center"
-          >
-            <div className="text-xl">{t("app.modal.rename.title")}</div>
-            <input
-              autoFocus
-              type="text"
-              className="w-full outline-none"
-              value={newFileName}
-              onChange={(e) => setNewFileName(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Escape") return hideModal()
-                if (e.key === "Enter") {
-                  const oldPath = item.path
-                  const newPath = item.path.replace(item.readableName, newFileName)
-                  dispatch(renameFileOrFolder({ oldPath, newPath }))
-                  hideModal()
-                }
-              }}
-            />
-            <div className="text-sm text-neutral-500">{t("app.modal.rename.hint")}</div>
-          </div>
-        </div>
-      </Modal>
+      <RenameModal />
     </>
   )
 }

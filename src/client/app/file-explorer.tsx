@@ -5,9 +5,17 @@ import Either from "@core/utils/either"
 import Null from "@client/null"
 import FileOrFolder from "./components/file-explorer/file-or-folder"
 import { useContextMenu } from "@client/context-menu"
+import { useCreateFileModal, useCreateFolderModal } from "./components/create-modal"
+import { useHotkeys } from "react-hotkeys-hook"
 
 export default function FileExplorer() {
-  const personalDirectory = useAppSelector((state) => state.app.personalDirectory)
+  const root = useAppSelector((state) => state.app.personalDirectory)
+
+  const { showCreateFileModal, CreateFileModal } = useCreateFileModal({ parent: root })
+  const { showCreateFolderModal, CreateFolderModal } = useCreateFolderModal({ parent: root })
+
+  useHotkeys("ctrl+n", () => showCreateFileModal())
+  useHotkeys("ctrl+shift+n", () => showCreateFolderModal())
 
   // TODO: Move commands to be used from different places
   const { showContextMenu, ContextMenu } = useContextMenu({
@@ -15,13 +23,13 @@ export default function FileExplorer() {
       {
         title: "app.folder.create-file",
         icon: "BsFilePlus",
-        action: () => console.log("TODO"),
+        action: showCreateFileModal,
         accelerator: "CommandOrControl+N",
       },
       {
         title: "app.folder.create-folder",
         icon: "BsFolderPlus",
-        action: () => console.log("TODO"),
+        action: showCreateFolderModal,
         accelerator: "CommandOrControl+Shift+N",
       },
       { title: "separator" },
@@ -45,12 +53,16 @@ export default function FileExplorer() {
     ],
   })
 
-  return Either.fromNullable(personalDirectory).fold(Null, (root) => (
-    <div className="h-full" onContextMenu={showContextMenu}>
-      {root.children.map((item) => (
-        <FileOrFolder key={item.path} item={item} />
-      ))}
-      <ContextMenu />
-    </div>
-  ))
+  return Either.fromNullable(root)
+    .chain((folder) => Either.fromNullable(folder.children))
+    .fold(Null, (items) => (
+      <div className="h-full" onContextMenu={showContextMenu}>
+        {items.map((item) => (
+          <FileOrFolder key={item.path} item={item} />
+        ))}
+        <ContextMenu />
+        <CreateFileModal />
+        <CreateFolderModal />
+      </div>
+    ))
 }

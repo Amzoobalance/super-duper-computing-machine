@@ -11,4 +11,5 @@ export const LOCAL_SETTINGS_SCHEMA: Schema<LocalSettings> = {
   "window.position.x": { type: "number" },
   "window.position.y": { type: "number" },
   "file-explorer.expanded-folders": { type: "array", items: { type: "string" }, default: [] },
+  "app.separator": { type: "string" },
 }

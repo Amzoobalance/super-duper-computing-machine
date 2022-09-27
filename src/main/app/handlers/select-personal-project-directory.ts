@@ -11,5 +11,9 @@ export const handleSelectPersonalProjectDirectory = () => {
 
   if (!userInput) return currentProjectDirectory
 
-  return userInput[0]
+  const result = userInput[0]
+
+  UserSettingsStore.set("project.personal.directory", result)
+
+  return result
 }
