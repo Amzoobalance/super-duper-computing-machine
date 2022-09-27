@@ -13,6 +13,8 @@
   "app.files.confirm-move.description": "Будем всегда спрашивать, уверены ли вы, что хотите сделать то, что хотите сделать.",
   "app.files.confirm-delete.title": "Всегда подтверждать удаление",
   "app.files.confirm-delete.description": "Будем всегда спрашивать, уверены ли вы, что хотите сделать то, что хотите сделать.",
+  "app.modal.rename.title": "Переименовать",
+  "app.modal.rename.hint": "Жми Enter, чтобы применить изменения, или Escape, чтобы отменить.",
   "app.file.delete": "Удалить",
   "app.file.duplicate": "Создать копию",
   "app.file.copy-path": "Скопировать путь",

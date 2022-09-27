@@ -13,6 +13,8 @@
   "app.files.confirm-move.description": "Show the annoying alert box asking if you are sure you want to do what you want to do.",
   "app.files.confirm-delete.title": "Confirm removing files or folders",
   "app.files.confirm-delete.description": "Show the annoying alert box asking if you are sure you want to do what you want to do.",
+  "app.modal.rename.title": "Rename",
+  "app.modal.rename.hint": "Press Enter to apply changes, Escape to cancel.",
   "app.file.delete": "Delete",
   "app.file.duplicate": "Duplicate",
   "app.file.copy-path": "Copy path",

@@ -13,7 +13,6 @@ import SideBar from "@client/side-bar"
 import Workspace from "@client/workspace"
 
 // import Overlay from "@core/overlay"
-// import StatusBar from "@core/status-bar"
 // import CommandBar from "@core/command-bar"
 // import ContextMenu from "@core/context-menu"
 

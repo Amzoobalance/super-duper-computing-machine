@@ -8,12 +8,16 @@ import { isFolder } from "@core/app/is-folder"
 import File from "@client/app/components/file-explorer/file"
 import FileOrFolder from "./file-or-folder"
 import { useContextMenu } from "@client/context-menu"
+import { useAppDispatch } from "@client/state"
+import { deleteFileOrFolder, listFolder } from "@client/app/store"
 
 type Props = {
   item: OrdoFolder
 }
 
 export default function Directory({ item }: Props) {
+  const dispatch = useAppDispatch()
+
   const hasChildren = item.children.length > 0
 
   const ChevronDown = useIcon("BsChevronDown")
@@ -60,7 +64,7 @@ export default function Directory({ item }: Props) {
       {
         title: "app.file.delete",
         icon: "BsTrash",
-        action: () => console.log("TODO"),
+        action: () => dispatch(deleteFileOrFolder(item.path)),
       },
       { title: "separator" },
       {

@@ -40,6 +40,20 @@ export const openFile = createAsyncThunk("@app/openFile", (payload: OrdoFile) =>
   window.ordo.emit<{ file: OrdoFile; raw: string }, OrdoFile>({ type: "@app/openFile", payload })
 )
 
+export const createFile = createAsyncThunk("@app/createFile", (payload: string) =>
+  window.ordo.emit<void, string>({ type: "@app/createFile", payload })
+)
+
+export const deleteFileOrFolder = createAsyncThunk("@app/delete", (payload: string) =>
+  window.ordo.emit<OrdoFolder, string>({ type: "@app/delete", payload })
+)
+
+type TRenameParams = { oldPath: string; newPath: string }
+
+export const renameFileOrFolder = createAsyncThunk("@app/rename", (payload: TRenameParams) =>
+  window.ordo.emit<OrdoFolder, TRenameParams>({ type: "@app/rename", payload })
+)
+
 export const appSlice = createSlice({
   name: "@app",
   initialState,
@@ -83,6 +97,12 @@ export const appSlice = createSlice({
       .addCase(openFile.fulfilled, (state, action) => {
         state.currentFileRaw = action.payload.raw
         state.currentFile = action.payload.file
+      })
+      .addCase(deleteFileOrFolder.fulfilled, (state, action) => {
+        state.personalDirectory = action.payload
+      })
+      .addCase(renameFileOrFolder.fulfilled, (state, action) => {
+        state.personalDirectory = action.payload
       })
   },
 })
