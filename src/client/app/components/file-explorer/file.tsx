@@ -40,11 +40,13 @@ export default function File({ item }: Props) {
         title: "app.file.copy-path",
         icon: "BsSignpost2",
         action: () => console.log("TODO"),
+        accelerator: "CommandOrControl+Alt+C",
       },
       {
         title: "app.file.copy-relative-path",
         icon: "BsSignpost",
         action: () => console.log("TODO"),
+        accelerator: "CommandOrControl+Shift+Alt+C",
       },
       {
         title: "app.file.reveal-in-files",

@@ -14,10 +14,12 @@ type Props = {
 }
 
 export default function Directory({ item }: Props) {
+  const hasChildren = item.children.length > 0
+
   const ChevronDown = useIcon("BsChevronDown")
   const ChevronRight = useIcon("BsChevronRight")
-  const OpenFolder = useIcon("FaFolderOpen")
-  const ClosedFolder = useIcon("FaFolder")
+  const OpenFolder = useIcon(hasChildren ? "AiFillFolderOpen" : "AiOutlineFolderOpen")
+  const ClosedFolder = useIcon(hasChildren ? "AiFillFolder" : "AiOutlineFolder")
 
   const [isExpanded, setIsExpanded] = useState(false)
 
@@ -46,11 +48,13 @@ export default function Directory({ item }: Props) {
         title: "app.folder.create-file",
         icon: "BsFilePlus",
         action: () => console.log("TODO"),
+        accelerator: "CommandOrControl+N",
       },
       {
         title: "app.folder.create-folder",
         icon: "BsFolderPlus",
         action: () => console.log("TODO"),
+        accelerator: "CommandOrControl+Shift+N",
       },
       { title: "separator" },
       {
@@ -63,11 +67,13 @@ export default function Directory({ item }: Props) {
         title: "app.file.copy-path",
         icon: "BsSignpost2",
         action: () => console.log("TODO"),
+        accelerator: "CommandOrControl+Alt+C",
       },
       {
         title: "app.file.copy-relative-path",
         icon: "BsSignpost",
         action: () => console.log("TODO"),
+        accelerator: "CommandOrControl+Shift+Alt+C",
       },
       {
         title: "app.file.reveal-in-files",

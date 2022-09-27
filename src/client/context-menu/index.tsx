@@ -57,13 +57,13 @@ export default function ContextMenu({ structure, isShown, hideContextMenu, x, y 
 
   return Either.fromBoolean(isShown).fold(Null, () => (
     <div
-      className="fixed top-0 left-0 right-0 bottom-0 cursor-default"
+      className="fixed top-0 left-0 right-0 bottom-0 cursor-default z-50"
       onClick={hideContextMenu}
       onContextMenu={hideContextMenu}
     >
       <div
         style={{ marginLeft: `${x}px`, marginTop: `${y}px` }}
-        className="inline-block bg-neutral-200 dark:bg-neutral-600 w-auto shadow-lg"
+        className="inline-block bg-neutral-50 dark:bg-neutral-600 w-auto shadow-lg"
       >
         {structure.children.map((child, index) => (
           <MenuItem item={child} key={index} hideContextMenu={hideContextMenu} />
@@ -92,13 +92,19 @@ const MenuItem = ({
   }
 
   return item.title === "separator" ? (
-    <hr className="border-t border-neutral-300 dark:border-nutral-700" />
+    <hr className="border-t border-neutral-300 dark:border-neutral-600" />
   ) : (
-    <div className="hover-passive px-4 py-1 text-sm flex items-center space-x-2" onClick={onClick}>
-      <Icon className="shrink-0" />
-      <div title={title} className="truncate">
-        {title}
+    <div
+      className="hover-passive px-4 py-1 text-sm flex items-center justify-between"
+      onClick={onClick}
+    >
+      <div className="flex items-center space-x-2">
+        <Icon className="shrink-0" />
+        <div title={title} className="truncate">
+          {title}
+        </div>
       </div>
+      <Accelerator accelerator={item.accelerator} />
     </div>
   )
 }
@@ -112,4 +118,36 @@ export type TMenuItem = {
 
 export type TMenu = {
   children: TMenuItem[]
+}
+
+type AcceleratorProps = {
+  accelerator?: string
+}
+
+export const Accelerator = ({ accelerator }: AcceleratorProps) => {
+  const platform = navigator.appVersion.indexOf("Mac") != -1 ? "darwin" : "other"
+
+  const [split, setSplit] = React.useState<string[]>([])
+  const [alt, setAlt] = React.useState<string>("Alt")
+  const [ctrl, setCtrl] = React.useState<string>("Ctrl")
+
+  React.useEffect(() => {
+    if (accelerator) setSplit(accelerator.split("+"))
+  }, [accelerator])
+
+  React.useEffect(() => {
+    if (platform === "darwin") {
+      setCtrl("⌘")
+      setAlt("⌥")
+    }
+  }, [platform])
+
+  return Either.fromNullable(accelerator).fold(Null, () => (
+    <div className="flex items-center text-xs space-x-1 ml-6 text-neutral-500">
+      {split.includes("CommandOrControl") ? <div className="">{ctrl} +</div> : null}
+      {split.includes("Shift") ? <div className="">⇧ +</div> : null}
+      {split.includes("Alt") ? <div className="">{alt} +</div> : null}
+      <div className="">{split[split.length - 1]}</div>
+    </div>
+  ))
 }

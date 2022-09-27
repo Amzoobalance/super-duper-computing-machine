@@ -179,5 +179,5 @@
 }
 
 .hover-passive {
-  @apply hover:bg-gradient-to-r hover:from-neutral-300 hover:dark:from-neutral-700 hover:to-slate-300 hover:dark:to-slate-700;
+  @apply hover:bg-gradient-to-r hover:from-neutral-300 hover:dark:from-stone-700 hover:to-slate-300 hover:dark:to-slate-700;
 }
