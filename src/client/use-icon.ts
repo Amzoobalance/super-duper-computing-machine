@@ -32,6 +32,7 @@ const isIconAvailable = (name?: IconName) => Boolean(name && ALL_ICONS[name])
  * or the name is not provided, returns a NoOp. Results are cached per icon name.
  */
 export const useIcon = (name?: IconName): IconType => {
+  // TODO: Accept className externally, but apply shrink-0 by default
   const Icon = useMemo(() => {
     const iconThunk = Switch.of(name)
       .case(isIconAvailable, () => ALL_ICONS[name as string])

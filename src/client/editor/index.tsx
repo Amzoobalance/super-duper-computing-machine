@@ -128,7 +128,7 @@ export default function Editor() {
   // TODO: ctrl+click for adding a caret at click point
   // TODO: shift+click for mouse selection from range to click point
   // TODO: mousedown+mouseup for mouse selection from mousedown point to mouseup point
-  // TODO: ctrl+a
+  // TODO: ctrl+a to select everything
   // TODO: ctrl+x, ctrl+c, ctrl+v
   // TODO: ctrl+z, ctrl+shift+z
   // BUG: When typing very quickly (basically, rolling over the keyboard) some characters are lost

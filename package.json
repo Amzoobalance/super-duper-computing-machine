@@ -115,6 +115,7 @@
     "ramda": "^0.28.0",
     "react": "^18.2.0",
     "react-contenteditable": "^3.3.6",
+    "react-contexify": "^5.0.0",
     "react-dom": "^18.2.0",
     "react-hotkeys-hook": "^3.4.7",
     "react-i18next": "^11.18.6",
