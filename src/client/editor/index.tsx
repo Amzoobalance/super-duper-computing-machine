@@ -26,7 +26,7 @@ import { handleBackspace } from "./key-handlers/backspace"
 import { handleDelete } from "./key-handlers/delete"
 import Switch from "@core/utils/switch"
 import { handleChar } from "./key-handlers/char"
-import { EditorKeys } from "@core/editor/editor-keys"
+import { IsKey } from "@core/editor/editor-keys"
 import { initialCaretRanges } from "@core/editor/initial-caret-ranges"
 
 export default function Editor() {
@@ -109,33 +109,45 @@ export default function Editor() {
         setRaw(raw)
       })
 
-  const onChar = (event: KeyboardEvent) =>
-    Either.of(event)
-      .map(preventDefault)
-      .chain(() => Either.fromNullable(parsedFile))
-      .chain((file) =>
-        Either.fromBoolean(event.key.length === 1)
-          .map(() => (event.shiftKey ? event.key.toLocaleUpperCase() : event.key))
-          .map((char) => handleChar(caretRanges, char))
-          .map((handleFile) => handleFile(file))
-      )
-      .fold(noOp, ({ ranges, raw }) => {
-        setCaretRanges(ranges)
-        setRaw(raw)
-      })
+  const onChar = (event: KeyboardEvent) => {
+    if (!parsedFile) return
 
+    event.preventDefault()
+
+    console.log(event)
+
+    const char = event.shiftKey ? event.key.toLocaleUpperCase() : event.key
+
+    const handleFile = handleChar(caretRanges, char)
+
+    const { ranges, raw } = handleFile(parsedFile)
+
+    setRaw(raw)
+    setCaretRanges(ranges)
+  }
+
+  // TODO: shiftArrows, ctrlArrows, ctrlBackspace, ctrlDelete
+  // TODO: ctrl+click for more carets
+  // TODO: shift+click for mouse selection
+  // TODO: mousedown+mouseup for mouse selection
+  // TODO: ctrl+a
+  // TODO: ctrl+x, ctrl+c, ctrl+v
+  // TODO: ctrl+z, ctrl+shift+z
+  // BUG: When typing very quickly (basically, rolling over the keyboard) some characters are lost
+  // but the caret position is updated properly. This leads to losing caret visually. Maybe debouncing
+  // `onChar` to, like, 50ms would help?
   useHotkeys(
     "*",
     (event) => {
       const handle = Switch.of(event)
-        .case(EditorKeys.backspace, onBackspace)
-        .case(EditorKeys.delete, onDelete)
-        .case(EditorKeys.enter, onEnter)
-        .case(EditorKeys.arrowLeft, onArrowLeft)
-        .case(EditorKeys.arrowRight, onArrowRight)
-        .case(EditorKeys.arrowUp, onArrowUp)
-        .case(EditorKeys.arrowDown, onArrowDown)
-        .case(EditorKeys.char, onChar)
+        .case(IsKey.backspace, onBackspace)
+        .case(IsKey.delete, onDelete)
+        .case(IsKey.enter, onEnter)
+        .case(IsKey.arrowLeft, onArrowLeft)
+        .case(IsKey.arrowRight, onArrowRight)
+        .case(IsKey.arrowUp, onArrowUp)
+        .case(IsKey.arrowDown, onArrowDown)
+        .case(IsKey.char, onChar)
         .default(noOp)
 
       handle(event)
