@@ -9,6 +9,7 @@ export type AppState = {
   personalDirectory: Nullable<OrdoFolder>
   currentFileRaw: string
   currentFile: Nullable<OrdoFile>
+  isSavingFile: boolean
 }
 
 const initialState: AppState = {
@@ -17,6 +18,7 @@ const initialState: AppState = {
   personalDirectory: null,
   currentFileRaw: "",
   currentFile: null,
+  isSavingFile: false,
 }
 
 export const getUserSettings = createAsyncThunk("@app/getUserSettings", async () =>
@@ -56,6 +58,12 @@ type TRenameParams = { oldPath: string; newPath: string }
 
 export const renameFileOrFolder = createAsyncThunk("@app/rename", (payload: TRenameParams) =>
   window.ordo.emit<OrdoFolder, TRenameParams>({ type: "@app/rename", payload })
+)
+
+type TSaveFileParams = { path: string; content: string }
+
+export const saveFile = createAsyncThunk("@app/saveFile", (payload: TSaveFileParams) =>
+  window.ordo.emit<void, TSaveFileParams>({ type: "@app/saveFile", payload })
 )
 
 export const appSlice = createSlice({
@@ -113,6 +121,12 @@ export const appSlice = createSlice({
       })
       .addCase(createFile.fulfilled, (state, action) => {
         state.personalDirectory = action.payload
+      })
+      .addCase(saveFile.pending, (state) => {
+        state.isSavingFile = true
+      })
+      .addCase(saveFile.fulfilled, (state) => {
+        state.isSavingFile = false
       })
   },
 })

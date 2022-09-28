@@ -2,7 +2,7 @@ import type { Nullable } from "@core/types"
 
 import React, { useEffect, useState, MouseEvent } from "react"
 
-import { useAppSelector } from "@client/state"
+import { useAppDispatch, useAppSelector } from "@client/state"
 import { getFileParser } from "@core/get-file-parser"
 import Either from "@core/utils/either"
 
@@ -28,8 +28,12 @@ import { handleDelete } from "@core/editor/key-handlers/delete"
 import { handleEnter } from "@core/editor/key-handlers/enter"
 import { RootNode } from "@core/editor/types"
 import { IsKey } from "@core/editor/is-key"
+import { saveFile } from "@client/app/store"
+import { useIcon } from "@client/use-icon"
 
 export default function Editor() {
+  const dispatch = useAppDispatch()
+
   const [raw, setRaw] = useState("")
   const [parsedFile, setParsedFile] = useState<Nullable<RootNode>>(null)
   const [parse, setParse] = useState<(raw: string) => Nullable<RootNode>>(() => null)
@@ -37,6 +41,9 @@ export default function Editor() {
 
   const currentFileRaw = useAppSelector((state) => state.app.currentFileRaw)
   const currentFile = useAppSelector((state) => state.app.currentFile)
+  const isSavingFile = useAppSelector((state) => state.app.isSavingFile)
+
+  const SpinIcon = useIcon("HiOutlineRefresh")
 
   useEffect(() => {
     if (currentFile) setParse(() => getFileParser(currentFile))
@@ -47,7 +54,7 @@ export default function Editor() {
   }, [raw, parse])
 
   useEffect(() => {
-    if (currentFileRaw) setRaw(currentFileRaw)
+    if (currentFileRaw != null) setRaw(currentFileRaw)
     setCaretRanges(initialCaretRanges)
   }, [currentFileRaw])
 
@@ -87,6 +94,8 @@ export default function Editor() {
       .fold(noOp, ({ ranges, raw }) => {
         setCaretRanges(ranges)
         setRaw(raw)
+        // TODO: Debounce saving
+        dispatch(saveFile({ content: raw, path: currentFile!.path }))
       })
 
   const onBackspace = (event: Event) =>
@@ -97,6 +106,7 @@ export default function Editor() {
       .fold(noOp, ({ ranges, raw }) => {
         setCaretRanges(ranges)
         setRaw(raw)
+        dispatch(saveFile({ content: raw, path: currentFile!.path }))
       })
 
   const onDelete = (event: Event) =>
@@ -107,6 +117,7 @@ export default function Editor() {
       .fold(noOp, ({ ranges, raw }) => {
         setCaretRanges(ranges)
         setRaw(raw)
+        dispatch(saveFile({ content: raw, path: currentFile!.path }))
       })
 
   const onChar = (event: KeyboardEvent) =>
@@ -122,6 +133,7 @@ export default function Editor() {
       .fold(noOp, ({ ranges, raw }) => {
         setRaw(raw)
         setCaretRanges(ranges)
+        dispatch(saveFile({ content: raw, path: currentFile!.path }))
       })
 
   // TODO: shiftArrows, ctrlArrows, ctrlBackspace, ctrlDelete
@@ -150,7 +162,7 @@ export default function Editor() {
 
       handle(event)
     },
-    [parsedFile, caretRanges]
+    [parsedFile, caretRanges, currentFile]
   )
 
   const handleClick = (event: MouseEvent) => {
@@ -184,6 +196,11 @@ export default function Editor() {
             node={node}
           />
         ))}
+        {isSavingFile && (
+          <div className="fixed top-5 right-5">
+            <SpinIcon className="text-sm text-neutral-500 animate-spin duration-300" />
+          </div>
+        )}
       </div>
     ))
 }

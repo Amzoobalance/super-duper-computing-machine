@@ -9,10 +9,12 @@ import { handleCreateFile } from "@main/app/handlers/create-file"
 import { handleOpenFile } from "@main/app/handlers/open-file"
 import { handleDelete } from "@main/app/handlers/delete"
 import { handleRename } from "@main/app/handlers/rename"
+import { handleSaveFile } from "@main/app/handlers/save-file"
 
 export default registerMainHandlers({
   "@app/rename": handleRename,
   "@app/delete": handleDelete,
+  "@app/saveFile": handleSaveFile,
   "@app/openFile": handleOpenFile,
   "@app/listFolder": handleListFolder,
   "@app/createFile": handleCreateFile,
