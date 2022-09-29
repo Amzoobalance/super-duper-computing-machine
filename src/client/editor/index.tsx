@@ -106,6 +106,7 @@ export default function Editor() {
       .fold(noOp, ({ ranges, raw }) => {
         setCaretRanges(ranges)
         setRaw(raw)
+        // TODO: Debounce saving
         dispatch(saveFile({ content: raw, path: currentFile!.path }))
       })
 
@@ -117,6 +118,7 @@ export default function Editor() {
       .fold(noOp, ({ ranges, raw }) => {
         setCaretRanges(ranges)
         setRaw(raw)
+        // TODO: Debounce saving
         dispatch(saveFile({ content: raw, path: currentFile!.path }))
       })
 
@@ -133,6 +135,7 @@ export default function Editor() {
       .fold(noOp, ({ ranges, raw }) => {
         setRaw(raw)
         setCaretRanges(ranges)
+        // TODO: Debounce saving
         dispatch(saveFile({ content: raw, path: currentFile!.path }))
       })
 
