@@ -1,8 +1,7 @@
-import { CaretRange, LineNode } from "../types"
-
 import React, { Dispatch, SetStateAction, MouseEvent } from "react"
 import BlockNode from "./block-node"
 import { CaretRangeDirection } from "../../../core/editor/constants"
+import { LineNode, CaretRange } from "@core/editor/types"
 
 type Props = {
   node: LineNode

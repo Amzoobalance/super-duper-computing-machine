@@ -28,9 +28,10 @@ export default function SelectSetting({
       value={value}
       onChange={handleChange}
     >
-      {options.map((option: string) => (
-        <SelectSettingOption key={`${schemaKey}-${option}`} option={option} />
-      ))}
+      {options &&
+        options.map((option: string) => (
+          <SelectSettingOption key={`${schemaKey}-${option}`} option={option} />
+        ))}
     </select>
   ))
 }

@@ -92,10 +92,21 @@ export default function Editor() {
       .chain(() => Either.fromNullable(parsedFile))
       .map(handleEnter(caretRanges))
       .fold(noOp, ({ ranges, raw }) => {
-        setCaretRanges(ranges)
         setRaw(raw)
+        setCaretRanges(ranges)
         // TODO: Debounce saving
-        dispatch(saveFile({ content: raw, path: currentFile!.path }))
+        if (!parsedFile || !currentFile) return
+
+        dispatch(
+          saveFile({
+            checkboxes: parsedFile.data.checkboxes,
+            dates: parsedFile.data.dates,
+            links: parsedFile.data.links,
+            tags: parsedFile.data.tags,
+            path: currentFile.path,
+            raw,
+          })
+        )
       })
 
   const onBackspace = (event: Event) =>
@@ -104,10 +115,21 @@ export default function Editor() {
       .chain(() => Either.fromNullable(parsedFile))
       .map(handleBackspace(caretRanges))
       .fold(noOp, ({ ranges, raw }) => {
-        setCaretRanges(ranges)
         setRaw(raw)
+        setCaretRanges(ranges)
         // TODO: Debounce saving
-        dispatch(saveFile({ content: raw, path: currentFile!.path }))
+        if (!parsedFile || !currentFile) return
+
+        dispatch(
+          saveFile({
+            checkboxes: parsedFile.data.checkboxes,
+            dates: parsedFile.data.dates,
+            links: parsedFile.data.links,
+            tags: parsedFile.data.tags,
+            path: currentFile.path,
+            raw,
+          })
+        )
       })
 
   const onDelete = (event: Event) =>
@@ -116,10 +138,21 @@ export default function Editor() {
       .chain(() => Either.fromNullable(parsedFile))
       .map(handleDelete(caretRanges))
       .fold(noOp, ({ ranges, raw }) => {
-        setCaretRanges(ranges)
         setRaw(raw)
+        setCaretRanges(ranges)
         // TODO: Debounce saving
-        dispatch(saveFile({ content: raw, path: currentFile!.path }))
+        if (!parsedFile || !currentFile) return
+
+        dispatch(
+          saveFile({
+            checkboxes: parsedFile.data.checkboxes,
+            dates: parsedFile.data.dates,
+            links: parsedFile.data.links,
+            tags: parsedFile.data.tags,
+            path: currentFile.path,
+            raw,
+          })
+        )
       })
 
   const onChar = (event: KeyboardEvent) =>
@@ -136,7 +169,18 @@ export default function Editor() {
         setRaw(raw)
         setCaretRanges(ranges)
         // TODO: Debounce saving
-        dispatch(saveFile({ content: raw, path: currentFile!.path }))
+        if (!parsedFile || !currentFile) return
+
+        dispatch(
+          saveFile({
+            checkboxes: parsedFile.data.checkboxes,
+            dates: parsedFile.data.dates,
+            links: parsedFile.data.links,
+            tags: parsedFile.data.tags,
+            path: currentFile.path,
+            raw,
+          })
+        )
       })
 
   // TODO: shiftArrows, ctrlArrows, ctrlBackspace, ctrlDelete

@@ -1,19 +1,17 @@
-import { ORDO_FILE_EXTENSION, ORDO_METADATA_EXTENSION } from "@core/app/constants"
+import { ORDO_FILE_EXTENSION } from "@core/app/constants"
+import { RootNode } from "@core/editor/types"
 
 import { promises } from "fs"
 
-type TParams = {
+type TParams = RootNode["data"] & {
   path: string
-  content: string
 }
 
-export const handleSaveFile = async ({ path, content }: TParams) => {
+export const handleSaveFile = async ({ path, raw, tags, checkboxes, dates, links }: TParams) => {
   const isOrdoFile = path.endsWith(ORDO_FILE_EXTENSION)
 
-  if (isOrdoFile) {
-    const metadataPath = path + ORDO_METADATA_EXTENSION
-    // TODO: Collect and save metadata to metadataPath
-  }
+  if (!isOrdoFile) return
 
-  await promises.writeFile(path, content, "utf8")
+  const metadata = JSON.stringify({ tags, checkboxes, dates, links })
+  await promises.writeFile(path, metadata.concat("\n").concat(raw), "utf8")
 }

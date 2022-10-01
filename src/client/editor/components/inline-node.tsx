@@ -1,5 +1,5 @@
+import { TextNode, CaretRange } from "@core/editor/types"
 import React, { useState, useEffect, Dispatch, SetStateAction } from "react"
-import { CaretRange, TextNode } from "../types"
 import Caret from "./caret"
 import Char from "./char"
 
@@ -26,7 +26,22 @@ export default function InlineNode({ node, caretRanges, setCaretRanges }: Props)
     }
   }, [caretRanges, node])
 
-  if (node.type !== "text") return null
+  if (node.type === "checkbox")
+    return (
+      <span className="bg-neutral-200">
+        {hasCaretAtLineStart && <Caret />}
+        {node.value.split("").map((char, index) => (
+          <Char
+            key={`${node.position?.start.line}-${node.position?.start.column}-${index + 1}`}
+            char={char}
+            index={index}
+            caretRanges={caretRanges}
+            setCaretRanges={setCaretRanges}
+            node={node}
+          />
+        ))}
+      </span>
+    )
 
   if (!node.value) {
     return (

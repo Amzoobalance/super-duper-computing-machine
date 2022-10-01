@@ -1,5 +1,6 @@
 import type { Nullable } from "@core/types"
 import type { LocalSettings, OrdoFile, OrdoFolder, UserSettings } from "@core/app/types"
+import type { RootNode } from "@core/editor/types"
 
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit"
 
@@ -60,7 +61,7 @@ export const renameFileOrFolder = createAsyncThunk("@app/rename", (payload: TRen
   window.ordo.emit<OrdoFolder, TRenameParams>({ type: "@app/rename", payload })
 )
 
-type TSaveFileParams = { path: string; content: string }
+type TSaveFileParams = RootNode["data"] & { path: string }
 
 export const saveFile = createAsyncThunk("@app/saveFile", (payload: TSaveFileParams) =>
   window.ordo.emit<void, TSaveFileParams>({ type: "@app/saveFile", payload })

@@ -1,10 +1,15 @@
-import { LineNode, RootNode } from "@client/editor/types"
+import { TextNodeType } from "@core/editor/constants"
+import { LineNode, RootNode } from "@core/editor/types"
 
 export const createRoot = (raw: string): RootNode => {
   const root: RootNode = {
     type: "root",
     data: {
       raw,
+      tags: [],
+      checkboxes: [],
+      dates: [],
+      links: [],
     },
     children: [],
   }
@@ -24,7 +29,7 @@ export const createRoot = (raw: string): RootNode => {
       type: "line",
       data: { raw: line },
       position: { start, end },
-      children: [{ type: "text", position: { start, end }, value: line }],
+      children: [{ type: TextNodeType.TEXT, position: { start, end }, value: line }],
     }
 
     root.children.push(lineNode)
