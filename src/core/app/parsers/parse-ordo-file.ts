@@ -1,21 +1,27 @@
-import type { RootNode } from "@core/editor/types"
+import type { OrdoDate, RootNode } from "@core/editor/types"
 
 import { createRoot } from "@core/app/parsers/create-root"
 
 export const parseOrdoFile = (raw: string): RootNode => {
   const root = createRoot(raw)
 
+  return root
+}
+
+export const parseMetadata = (tree: RootNode) => {
   const extract = createExtractor()
 
-  extract(root)
+  extract(tree)
 
-  return root
+  return tree
 }
 
 const createExtractor = () => (tree: RootNode) => {
   const tagRx = /--([\p{L}-]+)/giu
   const checkboxRx = /^\([*\s]\)\s.*/
   const linkRx = /\(\((.*)\)\)/giu
+  const dateRx = /!?!\(\d{4}-\d{2}-\d{2}\)/g
+  const dateWithPatternRx = /(!?!\(\d{4}-\d{2}-\d{2}\+[0-9*]{5}\))/g
 
   for (let i = 0; i < tree.children.length; i++) {
     for (let ci = 0; ci < tree.children[i].children.length; ci++) {
@@ -33,6 +39,7 @@ const createExtractor = () => (tree: RootNode) => {
 
       if (checkboxRx.test(node.value)) {
         const checked = node.value.startsWith("(*) ")
+
         tree.data.checkboxes.push({
           checked,
           value: node.value,
@@ -45,7 +52,56 @@ const createExtractor = () => (tree: RootNode) => {
           embed: link.startsWith("!"),
           href: link.slice(2, -2),
         }))
+
         tree.data.links = Array.from(new Set(tree.data.links.concat(organizedLinks)))
+      }
+
+      if (dateRx.test(node.value)) {
+        const dates = node.value.match(dateRx) as string[]
+        const organizedDates: OrdoDate[] = dates.map((date) => {
+          const remind = date.startsWith("!!")
+          const isoDate = date.slice(remind ? 3 : 2, -1)
+
+          return {
+            remind,
+            start: new Date(isoDate),
+          }
+        })
+
+        organizedDates.forEach((date) => {
+          if (
+            !tree.data.dates.some(
+              (existingDate) => existingDate.start.toDateString() === date.start.toDateString()
+            )
+          ) {
+            tree.data.dates.push(date)
+          }
+        })
+      }
+
+      if (dateWithPatternRx.test(node.value)) {
+        const dates = node.value.match(dateWithPatternRx) as string[]
+        const organizedDates: OrdoDate[] = dates.map((date) => {
+          const remind = date.startsWith("!!")
+          const repeatPattern = date.slice(remind ? 14 : 13, -1)
+          const isoDate = date.slice(remind ? 3 : 2, -7)
+
+          return {
+            remind,
+            start: new Date(isoDate),
+            repeatPattern,
+          }
+        })
+
+        organizedDates.forEach((date) => {
+          if (
+            !tree.data.dates.some(
+              (existingDate) => existingDate.start.toDateString() === date.start.toDateString()
+            )
+          ) {
+            tree.data.dates.push(date)
+          }
+        })
       }
     }
   }

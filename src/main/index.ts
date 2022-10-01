@@ -1,5 +1,6 @@
 import { enforceMacOSAppLocation, is, setContentSecurityPolicy } from "electron-util"
 import { app, BrowserWindow, ipcMain, Menu, nativeTheme } from "electron"
+import install, { REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS } from "electron-devtools-installer"
 import { join } from "path"
 
 import Either from "@core/utils/either"
@@ -44,7 +45,11 @@ setContentSecurityPolicy(contentSecurityPolicy)
 
 const iconPath = join(__dirname, "src", "assets", "icons", "icon.png")
 
-const createWindow = () => {
+const createWindow = async () => {
+  if (is.development) {
+    await install([REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS])
+  }
+
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     show: false,

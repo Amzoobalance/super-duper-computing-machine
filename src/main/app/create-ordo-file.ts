@@ -32,6 +32,11 @@ export const createOrdoFile = (props: Props): OrdoFile => {
     extension,
     metadata: {
       color: Color.NEUTRAL,
+      tags: [],
+      checkboxes: [],
+      dates: [],
+      links: [],
+      raw: "",
     },
   }
 }

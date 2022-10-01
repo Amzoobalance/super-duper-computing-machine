@@ -3,6 +3,7 @@ import { Nullable } from "@core/types"
 
 import { Language } from "@core/locales"
 import { Theme } from "@core/theme"
+import { RootNode } from "@core/editor/types"
 
 export type OrdoPathLike = string
 export type OrdoPath = OrdoPathLike
@@ -27,7 +28,7 @@ export interface OrdoFSElement {
 export interface OrdoFile<TMetadata extends Record<string, unknown> = Record<string, unknown>>
   extends OrdoFSElement {
   extension: Nullable<OrdoFileExtension>
-  metadata: TMetadata & { color: Color }
+  metadata: TMetadata & RootNode["data"] & { color: Color }
   size: number
 }
 

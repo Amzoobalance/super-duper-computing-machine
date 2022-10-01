@@ -30,6 +30,7 @@ import { RootNode } from "@core/editor/types"
 import { IsKey } from "@core/editor/is-key"
 import { saveFile } from "@client/app/store"
 import { useIcon } from "@client/use-icon"
+import { parseMetadata } from "@core/app/parsers/parse-ordo-file"
 
 export default function Editor() {
   const dispatch = useAppDispatch()
@@ -231,11 +232,73 @@ export default function Editor() {
     ])
   }
 
-  return Either.fromNullable(parsedFile)
-    .chain((file) => Either.fromNullable(file.children))
-    .fold(Null, (children) => (
+  const LinkIcon = useIcon("BsLink")
+  const TagIcon = useIcon("BsTag")
+  // TODO: Add icon for when none of the checkboxes are checked
+  const CheckboxIcon = useIcon("BsCheckCircle")
+  const DateIcon = useIcon("BsCalendar2Check")
+  const DateMissedIcon = useIcon("BsCalendar2Event")
+
+  return Either.fromNullable(parsedFile).fold(Null, (file) => (
+    <div className="h-full">
+      <div className="pb-4 flex flex-col space-y-2 text-sm text-neutral-600 dark:text-neutral-400">
+        <div className="flex space-x-8 items-center">
+          {currentFile?.metadata.checkboxes.length ? (
+            <div
+              className={`flex items-center space-x-2 ${
+                currentFile?.metadata.checkboxes.filter((checkbox) => checkbox.checked).length ===
+                currentFile.metadata.checkboxes.length
+                  ? "font-bold text-emerald-700 dark:text-emerald-500"
+                  : ""
+              }`}
+            >
+              <CheckboxIcon />
+              {/* TODO: Extract all these */}
+              <div>
+                {currentFile?.metadata.checkboxes.filter((checkbox) => checkbox.checked).length}/
+                {currentFile.metadata.checkboxes.length}
+              </div>
+            </div>
+          ) : null}
+
+          {currentFile?.metadata.links.length ? (
+            <div className="flex items-center space-x-2">
+              <LinkIcon />
+              <div>{currentFile?.metadata.links.length}</div>
+            </div>
+          ) : null}
+
+          {currentFile?.metadata.dates.length ? (
+            <div className="flex space-x-4">
+              {currentFile.metadata.dates.map((date, index) => (
+                <div className="flex space-x-2 items-center" key={index}>
+                  {date.remind && date.start < new Date() ? (
+                    <DateMissedIcon className="text-orange-700" />
+                  ) : (
+                    <DateIcon />
+                  )}
+                  <time>{date.start.toLocaleDateString()}</time>
+                </div>
+              ))}
+            </div>
+          ) : null}
+        </div>
+
+        {currentFile?.metadata.tags.length ? (
+          <div className="flex items-center space-x-2">
+            <TagIcon />
+            <div className="flex space-x-2 flex-wrap">
+              {currentFile?.metadata.tags.map((tag) => (
+                <div className="drop-shadow-lg" key={tag}>
+                  {tag}
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : null}
+      </div>
       <div className="cursor-text h-full" onClick={handleClick}>
-        {children.map((node) => (
+        {file.children.map((node) => (
           <Line
             key={`${node.position?.start.line}-${node.position?.start.column}-${node.position?.end.line}-${node.position?.end.column}`}
             caretRanges={caretRanges}
@@ -249,5 +312,6 @@ export default function Editor() {
           </div>
         )}
       </div>
-    ))
+    </div>
+  ))
 }
