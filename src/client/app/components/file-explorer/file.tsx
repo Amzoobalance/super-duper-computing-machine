@@ -29,6 +29,7 @@ export default function File({ item }: Props) {
       {
         title: "app.file.rename",
         icon: "BsPencilSquare",
+        accelerator: "F2",
         action: showRenameModal,
       },
       {

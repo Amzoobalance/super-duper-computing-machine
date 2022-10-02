@@ -31,6 +31,7 @@ import { IsKey } from "@core/editor/is-key"
 import { saveFile } from "@client/app/store"
 import { useIcon } from "@client/use-icon"
 import { parseMetadata } from "@core/app/parsers/parse-ordo-file"
+import { useRenameModal } from "@client/app/components/rename-modal"
 
 export default function Editor() {
   const dispatch = useAppDispatch()
@@ -58,6 +59,10 @@ export default function Editor() {
     if (currentFileRaw != null) setRaw(currentFileRaw)
     setCaretRanges(initialCaretRanges)
   }, [currentFileRaw])
+
+  const { showRenameModal, RenameModal } = useRenameModal(currentFile)
+
+  useHotkeys("f2", () => showRenameModal(), [currentFile])
 
   const onArrowDown = (event: Event) =>
     Either.of(event)
@@ -312,6 +317,7 @@ export default function Editor() {
           </div>
         )}
       </div>
+      <RenameModal />
     </div>
   ))
 }

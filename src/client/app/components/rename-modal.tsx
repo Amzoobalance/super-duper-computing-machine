@@ -1,4 +1,5 @@
 import type { OrdoFile, OrdoFolder } from "@core/app/types"
+import type { Nullable } from "@core/types"
 
 import React, { useState, MouseEvent } from "react"
 import { useTranslation } from "react-i18next"
@@ -7,8 +8,18 @@ import { renameFileOrFolder } from "@client/app/store"
 import { useAppDispatch } from "@client/state"
 import { useModalWindow } from "@client/modal"
 
-export const useRenameModal = (item: OrdoFile | OrdoFolder) => {
+import Null from "@client/null"
+
+export const useRenameModal = (item: Nullable<OrdoFile | OrdoFolder>) => {
   const { showModal, hideModal, Modal } = useModalWindow()
+
+  if (!item) {
+    return {
+      showRenameModal: () => void 0,
+      hideRenameModal: () => void 0,
+      RenameModal: Null,
+    }
+  }
 
   return {
     showRenameModal: showModal,

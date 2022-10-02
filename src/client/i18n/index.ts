@@ -9,13 +9,16 @@ import enEditor from "@core/editor/translations/en.json"
 import ruNotifications from "@core/notifications/translations/ru.json"
 import enNotifications from "@core/notifications/translations/en.json"
 
+import ruCheckboxes from "@client/checkboxes/translations/ru.json"
+import enCheckboxes from "@client/checkboxes/translations/en.json"
+
 import ruApp from "@core/app/translations/ru.json"
 import enApp from "@core/app/translations/en.json"
 
 use(initReactI18next).init({
   resources: {
-    en: { translation: { ...enApp, ...enEditor, ...enNotifications } },
-    ru: { translation: { ...ruApp, ...ruEditor, ...ruNotifications } },
+    en: { translation: { ...enApp, ...enEditor, ...enNotifications, ...enCheckboxes } },
+    ru: { translation: { ...ruApp, ...ruEditor, ...ruNotifications, ...ruCheckboxes } },
   },
   fallbackLng: "en",
   interpolation: { escapeValue: false },
