@@ -14,11 +14,10 @@ export const topActivities: Activity[] = [
   //   title: "ordo.activity.graph",
   //   icon: "BsShare",
   // },
-  // {
-  //   name: "checkboxes",
-  //   title: "ordo.activity.checkboxes",
-  //   icon: "BsCheck2Square",
-  // },
+  {
+    name: "checkboxes",
+    icon: "BsCheck2Square",
+  },
   // {
   //   name: "tags",
   //   title: "ordo.activity.tags",

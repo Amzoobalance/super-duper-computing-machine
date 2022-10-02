@@ -1,4 +1,5 @@
 import { TextNode, CaretRange } from "@core/editor/types"
+import Switch from "@core/utils/switch"
 import React, { useState, useEffect, Dispatch, SetStateAction } from "react"
 import Caret from "./caret"
 import Char from "./char"
@@ -11,6 +12,13 @@ type Props = {
 
 export default function InlineNode({ node, caretRanges, setCaretRanges }: Props) {
   const [hasCaretAtLineStart, setHasCaretAtLineStart] = useState(false)
+  const isCheckbox = node.value.startsWith("(*) ") || node.value.startsWith("( ) ")
+  const isCurrentLine = caretRanges.some((range) => range.start.line === node.position.start.line)
+  const isH1 = node.value.startsWith("+++++ ")
+  const isH2 = node.value.startsWith("++++ ")
+  const isH3 = node.value.startsWith("+++ ")
+  const isH4 = node.value.startsWith("++ ")
+  const isH5 = node.value.startsWith("+ ")
 
   useEffect(() => {
     const hasCaretAtStart = caretRanges.some(
@@ -26,22 +34,32 @@ export default function InlineNode({ node, caretRanges, setCaretRanges }: Props)
     }
   }, [caretRanges, node])
 
-  if (node.type === "checkbox")
-    return (
-      <span className="bg-neutral-200">
-        {hasCaretAtLineStart && <Caret />}
-        {node.value.split("").map((char, index) => (
-          <Char
-            key={`${node.position?.start.line}-${node.position?.start.column}-${index + 1}`}
-            char={char}
-            index={index}
-            caretRanges={caretRanges}
-            setCaretRanges={setCaretRanges}
-            node={node}
-          />
-        ))}
-      </span>
+  const chars = Switch.of(node.value)
+    .case(
+      () => isCheckbox && !isCurrentLine,
+      () => node.value.slice(4)
     )
+    .case(
+      () => isH1 && !isCurrentLine,
+      () => node.value.slice(6)
+    )
+    .case(
+      () => isH2 && !isCurrentLine,
+      () => node.value.slice(5)
+    )
+    .case(
+      () => isH3 && !isCurrentLine,
+      () => node.value.slice(4)
+    )
+    .case(
+      () => isH4 && !isCurrentLine,
+      () => node.value.slice(3)
+    )
+    .case(
+      () => isH5 && !isCurrentLine,
+      () => node.value.slice(2)
+    )
+    .default(() => node.value)
 
   if (!node.value) {
     return (
@@ -55,16 +73,18 @@ export default function InlineNode({ node, caretRanges, setCaretRanges }: Props)
   return (
     <span>
       {hasCaretAtLineStart && <Caret />}
-      {node.value.split("").map((char, index) => (
-        <Char
-          key={`${node.position?.start.line}-${node.position?.start.column}-${index + 1}`}
-          char={char}
-          index={index}
-          caretRanges={caretRanges}
-          setCaretRanges={setCaretRanges}
-          node={node}
-        />
-      ))}
+      {chars()
+        .split("")
+        .map((char, index) => (
+          <Char
+            key={`${node.position?.start.line}-${node.position?.start.column}-${index + 1}`}
+            char={char}
+            index={index}
+            caretRanges={caretRanges}
+            setCaretRanges={setCaretRanges}
+            node={node}
+          />
+        ))}
     </span>
   )
 }

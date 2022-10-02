@@ -80,7 +80,6 @@ export const handleListFolder = async (
           try {
             const metadataContent = await promises.readFile(metadataPath, "utf8")
             ordoFile.metadata = JSON.parse(metadataContent)
-            console.log(metadataContent)
           } catch (e) {
             ordoFile.metadata = {
               color: Color.NEUTRAL,
