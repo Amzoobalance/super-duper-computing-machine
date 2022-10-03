@@ -1,51 +1,62 @@
-import { useAppSelector } from "@client/state"
-import React, { useEffect, useMemo, useRef } from "react"
+import { useAppDispatch, useAppSelector } from "@client/state"
+import { Nullable } from "@core/types"
+import React, { useEffect, useMemo, useRef, useState } from "react"
 import { Network, Options, Edge, Node } from "vis-network"
-import { collectTags } from "./collect-tags"
+import { getTags } from "./store"
 
 export default function Tags() {
+  const dispatch = useAppDispatch()
   const tree = useAppSelector((state) => state.app.personalDirectory)
+  const hoveredTag = useAppSelector((state) => state.tags.hoveredTag)
+  const selectedTag = useAppSelector((state) => state.tags.selectedTag)
+  const tags = useAppSelector((state) => state.tags.tags)
   const ref = useRef<HTMLDivElement>(null)
+  const [network, setNetwork] = useState<Nullable<Network>>(null)
+  const [data, setData] = useState<{ nodes: Node[]; edges: Edge[] }>({ nodes: [], edges: [] })
 
-  const tags = collectTags(tree)
+  useEffect(() => {
+    if (tree) dispatch(getTags(tree))
+  }, [tree])
+
   const mode =
     window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
       ? "dark"
       : "light"
 
-  const data = useMemo(
+  const allData = useMemo(
     () =>
-      Object.keys(tags).reduce(
-        (acc, key) => {
-          const tagNode = acc.nodes.find((node) => node.id === key)
+      tags.reduce(
+        (acc, tag) => {
+          const tagNode = acc.nodes.find((node) => node.id === tag.name)
 
           if (!tagNode) {
             acc.nodes.push({
-              id: key,
-              label: key,
-              size: 10 + 2 * tags[key].length,
+              id: tag.name,
+              label: tag.name,
+              size: 10 + 2 * tag.files.length,
               borderWidth: 0,
-              color: mode === "dark" ? "#6d28d9" : "#d6d3d1",
+              color: mode === "dark" ? "#ec4899" : "#f472b6",
             })
           }
 
-          for (const file of tags[key]) {
+          for (const file of tag.files) {
             const fileNode = acc.nodes.find((node) => node.id === file)
 
             if (!fileNode) {
               acc.nodes.push({
                 id: file,
                 size: 10,
+                shape: "hexagon",
                 label: file.slice(0, -4),
-                color: mode === "dark" ? "#86198f" : "#cbd5e1",
+                color: mode === "dark" ? "#fafaf9" : "#44403c",
                 borderWidth: 0,
               })
             }
 
             acc.edges.push({
               from: file,
-              to: key,
-              length: 100,
+              to: tag.name,
+              length: 120,
             })
           }
 
@@ -53,11 +64,11 @@ export default function Tags() {
         },
         { nodes: [] as Node[], edges: [] as Edge[] }
       ),
-    [tree, ref.current]
+    [tags, ref.current]
   )
 
   useEffect(() => {
-    if (!ref.current || !tree) return
+    if (!ref.current || !tags) return
 
     const options: Options = {
       manipulation: { enabled: false },
@@ -75,7 +86,30 @@ export default function Tags() {
 
     const network = new Network(ref.current, data, options)
     network.disableEditMode()
-  }, [ref, tree])
+    setNetwork(network)
+  }, [ref, tags, data])
+
+  useEffect(() => {
+    if (!network || !data.nodes.some((node) => node.id === hoveredTag)) return
+
+    hoveredTag ? network.selectNodes([hoveredTag]) : network.selectNodes([])
+  }, [network, hoveredTag])
+
+  useEffect(() => {
+    if (!selectedTag) {
+      setData(allData)
+      return
+    }
+
+    const edges = allData.edges.filter(
+      (edge) => edge.from === selectedTag || edge.to === selectedTag
+    )
+    const nodes = allData.nodes.filter((node) =>
+      edges.some((edge) => node.id === edge.to || node.id === edge.from)
+    )
+
+    setData({ edges, nodes })
+  }, [selectedTag, allData])
 
   return <div className="cursor-auto h-full w-full" ref={ref}></div>
 }

@@ -36,14 +36,7 @@ export default function Checkboxes() {
     <div className="columns-2 gap-2">
       {Object.keys(checkboxes).map((readableName) => (
         <div
-          className={`bg-gradient-to-br p-4 shadow-lg break-inside-avoid-column rounded-md mb-2 ${
-            checkboxes[readableName].filter((checkbox) => checkbox.checked).length === 0
-              ? "from-slate-300 to-stone-300 dark:from-slate-700 dark:to-stone-700"
-              : checkboxes[readableName].filter((checkbox) => checkbox.checked).length ===
-                checkboxes[readableName].length
-              ? "from-emerald-200 to-green-400 dark:from-emerald-700 dark:to-green-700"
-              : "from-sky-200 to-purple-400 dark:from-sky-700 dark:to-purple-700"
-          }`}
+          className={`bg-gradient-to-br p-4 shadow-lg break-inside-avoid-column rounded-md mb-2 from-neutral-200 to-stone-200 dark:from-neutral-700 dark:to-stone-700`}
           key={readableName}
         >
           <div className="mb-2 font-bold">{readableName}</div>
@@ -51,7 +44,7 @@ export default function Checkboxes() {
             {checkboxes[readableName].map((checkbox, index) => (
               <label className="flex space-x-2 items-center" key={index}>
                 <input
-                  className="w-10 h-10 md:w-5 md:h-5 accent-neutral-700 shrink-0"
+                  className="w-10 h-10 md:w-5 md:h-5 accent-emerald-600 shrink-0"
                   type="checkbox"
                   checked={checkbox.checked}
                   onChange={console.log}
