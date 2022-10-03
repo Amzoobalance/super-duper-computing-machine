@@ -56,7 +56,7 @@ export default function Tags() {
             acc.edges.push({
               from: file,
               to: tag.name,
-              length: 120,
+              length: 150,
             })
           }
 
@@ -79,7 +79,7 @@ export default function Tags() {
         enabled: true,
         solver: "repulsion",
         repulsion: {
-          nodeDistance: 150, // Put more distance between the nodes.
+          nodeDistance: 200, // Put more distance between the nodes.
         },
       },
     }

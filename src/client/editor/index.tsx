@@ -30,7 +30,6 @@ import { RootNode } from "@core/editor/types"
 import { IsKey } from "@core/editor/is-key"
 import { saveFile } from "@client/app/store"
 import { useIcon } from "@client/use-icon"
-import { parseMetadata } from "@core/app/parsers/parse-ordo-file"
 import { useRenameModal } from "@client/app/components/rename-modal"
 
 export default function Editor() {
@@ -58,7 +57,7 @@ export default function Editor() {
   useEffect(() => {
     if (currentFileRaw != null) setRaw(currentFileRaw)
     setCaretRanges(initialCaretRanges)
-  }, [currentFileRaw])
+  }, [currentFileRaw, currentFile?.path])
 
   const { showRenameModal, RenameModal } = useRenameModal(currentFile)
 

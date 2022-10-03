@@ -82,7 +82,7 @@ export default function App() {
       <div className="flex grow">
         <ActivityBar />
         <SplitView
-          className="fixed top-0 left-11 right-0 bottom-0 flex grow"
+          className="fixed top-0 left-10 right-0 bottom-0 flex grow"
           sizes={sizes}
           snapOffset={SPLIT_SNAP_OFFSET}
           minSize={SPLIT_MIN_SIZE}

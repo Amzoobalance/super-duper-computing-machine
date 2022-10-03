@@ -6,9 +6,6 @@ import { initReactI18next } from "react-i18next"
 import ruEditor from "@core/editor/translations/ru.json"
 import enEditor from "@core/editor/translations/en.json"
 
-import ruNotifications from "@core/notifications/translations/ru.json"
-import enNotifications from "@core/notifications/translations/en.json"
-
 import ruCheckboxes from "@client/checkboxes/translations/ru.json"
 import enCheckboxes from "@client/checkboxes/translations/en.json"
 
@@ -20,8 +17,8 @@ import enApp from "@core/app/translations/en.json"
 
 use(initReactI18next).init({
   resources: {
-    en: { translation: { ...enApp, ...enEditor, ...enNotifications, ...enCheckboxes, ...enTags } },
-    ru: { translation: { ...ruApp, ...ruEditor, ...ruNotifications, ...ruCheckboxes, ...ruTags } },
+    en: { translation: { ...enApp, ...enEditor, ...enCheckboxes, ...enTags } },
+    ru: { translation: { ...ruApp, ...ruEditor, ...ruCheckboxes, ...ruTags } },
   },
   fallbackLng: "en",
   interpolation: { escapeValue: false },

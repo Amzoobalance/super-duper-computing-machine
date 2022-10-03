@@ -1,4 +1,4 @@
-import { useMemo } from "react"
+import React, { useMemo } from "react"
 import { IconType } from "react-icons"
 import * as HiIcons from "react-icons/hi"
 import * as DiIcons from "react-icons/di"
@@ -30,9 +30,9 @@ const isIconAvailable = (name?: IconName) => Boolean(name && ALL_ICONS[name])
 /**
  * React hook that provides quick access to a desired icon. If the icon is not available,
  * or the name is not provided, returns a NoOp. Results are cached per icon name.
+ * // TODO: Avoid importing redundant icons on the web
  */
-export const useIcon = (name?: IconName): IconType => {
-  // TODO: Accept className externally, but apply shrink-0 by default
+export const useIcon = (name?: IconName, className?: string): IconType => {
   const Icon = useMemo(() => {
     const iconThunk = Switch.of(name)
       .case(isIconAvailable, () => ALL_ICONS[name as string])
@@ -41,5 +41,5 @@ export const useIcon = (name?: IconName): IconType => {
     return iconThunk()
   }, [name])
 
-  return Icon
+  return () => <Icon className={`shrink-0 ${className}`} />
 }
