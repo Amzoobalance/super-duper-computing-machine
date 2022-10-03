@@ -23,7 +23,7 @@ export default function Tags() {
             acc.nodes.push({
               id: key,
               label: key,
-              size: 15 * tags[key].length,
+              size: 10 + 2 * tags[key].length,
               borderWidth: 0,
               color: mode === "dark" ? "#6d28d9" : "#d6d3d1",
             })
@@ -35,6 +35,7 @@ export default function Tags() {
             if (!fileNode) {
               acc.nodes.push({
                 id: file,
+                size: 10,
                 label: file.slice(0, -4),
                 color: mode === "dark" ? "#86198f" : "#cbd5e1",
                 borderWidth: 0,
@@ -44,7 +45,7 @@ export default function Tags() {
             acc.edges.push({
               from: file,
               to: key,
-              length: 150,
+              length: 100,
             })
           }
 
@@ -63,10 +64,14 @@ export default function Tags() {
       nodes: { shape: "dot", font: { color: mode === "dark" ? "#ddd" : "#111" } },
       edges: { smooth: { enabled: true, type: "continuous", roundness: 0 } },
       interaction: { hover: true, hideEdgesOnDrag: true, tooltipDelay: 200 },
-      physics: true,
+      physics: {
+        enabled: true,
+        solver: "repulsion",
+        repulsion: {
+          nodeDistance: 150, // Put more distance between the nodes.
+        },
+      },
     }
-
-    console.log(data)
 
     const network = new Network(ref.current, data, options)
     network.disableEditMode()
