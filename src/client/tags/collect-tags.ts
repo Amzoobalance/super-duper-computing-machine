@@ -6,8 +6,6 @@ import { TagObject } from "./types"
 export const collectTags = (tree: Nullable<OrdoFolder>, tags: TagObject[] = []) => {
   if (!tree) return tags
 
-  console.log(tree)
-
   for (const child of tree.children) {
     if (isFolder(child)) {
       tags = collectTags(child, tags)
