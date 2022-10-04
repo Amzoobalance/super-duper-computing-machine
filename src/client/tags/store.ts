@@ -6,13 +6,13 @@ import { TagObject } from "./types"
 export type TagsState = {
   tags: TagObject[]
   hoveredTag: string
-  selectedTag: string
+  selectedTags: string[]
 }
 
 const initialState: TagsState = {
   tags: [],
   hoveredTag: "",
-  selectedTag: "",
+  selectedTags: [],
 }
 
 export const tagsSlice = createSlice({
@@ -28,16 +28,29 @@ export const tagsSlice = createSlice({
     resetHoveredTag: (state: TagsState) => {
       state.hoveredTag = ""
     },
-    setSelectedTag: (state: TagsState, action: PayloadAction<string>) => {
-      state.selectedTag = action.payload
+    addSelectedTag: (state: TagsState, action: PayloadAction<string>) => {
+      state.selectedTags.push(action.payload)
     },
-    resetSelectedTag: (state: TagsState) => {
-      state.selectedTag = ""
+    removeSelectedTag: (state: TagsState, action: PayloadAction<string>) => {
+      state.selectedTags.splice(state.selectedTags.indexOf(action.payload), 1)
+    },
+    setSelectedTags: (state: TagsState, action: PayloadAction<string[]>) => {
+      state.selectedTags = action.payload
+    },
+    resetSelectedTags: (state: TagsState) => {
+      state.selectedTags = []
     },
   },
 })
 
-export const { getTags, setHoveredTag, resetHoveredTag, setSelectedTag, resetSelectedTag } =
-  tagsSlice.actions
+export const {
+  getTags,
+  setHoveredTag,
+  resetHoveredTag,
+  setSelectedTags,
+  resetSelectedTags,
+  addSelectedTag,
+  removeSelectedTag,
+} = tagsSlice.actions
 
 export default tagsSlice.reducer

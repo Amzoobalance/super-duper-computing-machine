@@ -9,7 +9,7 @@ export default function Tags() {
   const dispatch = useAppDispatch()
   const tree = useAppSelector((state) => state.app.personalDirectory)
   const hoveredTag = useAppSelector((state) => state.tags.hoveredTag)
-  const selectedTag = useAppSelector((state) => state.tags.selectedTag)
+  const selectedTags = useAppSelector((state) => state.tags.selectedTags)
   const tags = useAppSelector((state) => state.tags.tags)
   const ref = useRef<HTMLDivElement>(null)
   const [network, setNetwork] = useState<Nullable<Network>>(null)
@@ -99,20 +99,19 @@ export default function Tags() {
   }, [network, hoveredTag])
 
   useEffect(() => {
-    if (!selectedTag) {
+    if (!selectedTags.length) {
       setData(allData)
       return
     }
 
-    const edges = allData.edges.filter(
-      (edge) => edge.from === selectedTag || edge.to === selectedTag
-    )
-    const nodes = allData.nodes.filter((node) =>
-      edges.some((edge) => node.id === edge.to || node.id === edge.from)
-    )
+    const tagNodes = allData.nodes.filter((node) => selectedTags.some((tag) => node.id === tag))
+    const edges = allData.edges.filter((edge) => tagNodes.some((node) => edge.to === node.id))
+    const fileNodes = allData.nodes.filter((node) => edges.some((edge) => edge.from === node.id))
+
+    const nodes = [...tagNodes, ...fileNodes]
 
     setData({ edges, nodes })
-  }, [selectedTag, allData])
+  }, [selectedTags, allData])
 
   return <div className="cursor-auto h-full w-full" ref={ref}></div>
 }

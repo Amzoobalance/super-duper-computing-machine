@@ -68,7 +68,7 @@ export const renameFileOrFolder = createAsyncThunk("@app/rename", (payload: TRen
 type TSaveFileParams = RootNode["data"] & { path: string }
 
 export const saveFile = createAsyncThunk("@app/saveFile", (payload: TSaveFileParams) =>
-  window.ordo.emit<void, TSaveFileParams>({ type: "@app/saveFile", payload })
+  window.ordo.emit<OrdoFolder, TSaveFileParams>({ type: "@app/saveFile", payload })
 )
 
 export const appSlice = createSlice({
@@ -149,8 +149,9 @@ export const appSlice = createSlice({
       .addCase(saveFile.pending, (state) => {
         state.isSavingFile = true
       })
-      .addCase(saveFile.fulfilled, (state) => {
+      .addCase(saveFile.fulfilled, (state, action) => {
         state.isSavingFile = false
+        if (action.payload) state.personalDirectory = action.payload
       })
   },
 })

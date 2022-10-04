@@ -40,10 +40,10 @@ export const debouncePromise = <Args extends any[], Result>(task: Fn<Args, Resul
       t.cancel()
       t = deferred(ms)
       await t.promise
-      await task(...args)
+      const result = await task(...args)
+      return result
     } catch (e) {
       /* prevent memory leak */
-      t.cancel()
     }
   }
 }
