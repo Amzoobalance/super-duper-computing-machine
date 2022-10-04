@@ -1,3 +1,4 @@
+import { enableSideBar } from "@client/app/store"
 import { useAppDispatch, useAppSelector } from "@client/state"
 import { Nullable } from "@core/types"
 import React, { useEffect, useMemo, useRef, useState } from "react"
@@ -13,6 +14,8 @@ export default function Tags() {
   const ref = useRef<HTMLDivElement>(null)
   const [network, setNetwork] = useState<Nullable<Network>>(null)
   const [data, setData] = useState<{ nodes: Node[]; edges: Edge[] }>({ nodes: [], edges: [] })
+
+  useEffect(() => void dispatch(enableSideBar()), [])
 
   useEffect(() => {
     if (tree) dispatch(getTags(tree))

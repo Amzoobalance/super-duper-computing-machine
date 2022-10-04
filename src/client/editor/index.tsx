@@ -28,7 +28,7 @@ import { handleDelete } from "@core/editor/key-handlers/delete"
 import { handleEnter } from "@core/editor/key-handlers/enter"
 import { RootNode } from "@core/editor/types"
 import { IsKey } from "@core/editor/is-key"
-import { saveFile } from "@client/app/store"
+import { enableSideBar, saveFile } from "@client/app/store"
 import { useIcon } from "@client/use-icon"
 import { useRenameModal } from "@client/app/components/rename-modal"
 
@@ -45,6 +45,8 @@ export default function Editor() {
   const isSavingFile = useAppSelector((state) => state.app.isSavingFile)
 
   const SpinIcon = useIcon("HiOutlineRefresh")
+
+  useEffect(() => void dispatch(enableSideBar()), [])
 
   useEffect(() => {
     if (currentFile) setParse(() => getFileParser(currentFile))

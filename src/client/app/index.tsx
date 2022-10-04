@@ -2,69 +2,89 @@ import React, { useLayoutEffect, useState, useEffect } from "react"
 import { useHotkeys } from "react-hotkeys-hook"
 import SplitView from "react-split"
 
-import { SPLIT_DEFAULT_SIZES, SPLIT_SNAP_OFFSET, SPLIT_MIN_SIZE } from "@client/app/constants"
+import { SPLIT_SNAP_OFFSET, SPLIT_MIN_SIZE } from "@client/app/constants"
 import { useAppDispatch, useAppSelector } from "@client/state"
 import { selectActivity } from "@client/activity-bar/store"
-import { getLocalSettings, getUserSettings, listFolder } from "@client/app/store"
+import {
+  getLocalSettings,
+  getUserSettings,
+  listFolder,
+  setSideBarWidth,
+  toggleSideBar,
+} from "@client/app/store"
 import i18n from "@client/i18n"
 
 import ActivityBar from "@client/activity-bar"
 import SideBar from "@client/side-bar"
 import Workspace from "@client/workspace"
+import Switch from "@core/utils/switch"
 
 export default function App() {
   const dispatch = useAppDispatch()
   const fontSize = useAppSelector((state) => state.app.userSettings?.["editor.font-size"]) ?? 16
   const language =
     useAppSelector((state) => state.app.userSettings?.["appearance.language"]) ?? "en"
-  const personalProjectDirectory = useAppSelector(
-    (state) => state.app.userSettings?.["project.personal.directory"]
-  )
+  const project = useAppSelector((state) => state.app.userSettings?.["project.personal.directory"])
+  const sideBarWidth = useAppSelector((state) => state.app.sideBarWidth)
+  const isSideBarAvailable = useAppSelector((state) => state.app.isSideBarAvailable)
 
   const [isLeftCollapsed, setIsLeftCollapsed] = useState(false)
   const [isRightCollapsed, setIsRightCollapsed] = useState(false)
-  const [sizes, setSizes] = useState<[number, number]>(SPLIT_DEFAULT_SIZES)
+  const [sizes, setSizes] = useState<[number, number]>([sideBarWidth, 100 - sideBarWidth])
 
+  useHotkeys("ctrl+b", () => void dispatch(toggleSideBar()))
   useHotkeys("ctrl+e", () => void dispatch(selectActivity("editor")))
   useHotkeys("ctrl+,", () => void dispatch(selectActivity("settings")))
-  useHotkeys("ctrl+shift+n", () => void dispatch(selectActivity("notifications")))
+  useHotkeys("alt+n", () => void dispatch(selectActivity("notifications")))
 
   useLayoutEffect(() => {
     const body = document.querySelector(":root") as HTMLElement
-    const size = fontSize >= 8 ? fontSize : 8
+    const size = Switch.of(fontSize)
+      .case((size) => size < 8, 8)
+      .case((size) => size > 25, 25)
+      .default(fontSize)
 
-    if (body) body.style.fontSize = `${size}px`
+    body.style.fontSize = `${size}px`
   }, [fontSize])
 
   useEffect(() => {
-    i18n.changeLanguage(language)
-  }, [language])
+    setSizes([sideBarWidth, 100 - sideBarWidth])
+    if (sideBarWidth < 2) {
+      setIsLeftCollapsed(true)
+      setIsRightCollapsed(false)
+    } else if (sideBarWidth > 98) {
+      setIsLeftCollapsed(false)
+      setIsRightCollapsed(true)
+    } else {
+      setIsLeftCollapsed(false)
+      setIsRightCollapsed(false)
+    }
+  }, [sideBarWidth])
 
-  useHotkeys(
-    "ctrl+b",
-    () => {
-      setIsLeftCollapsed((prev) => !prev)
-      const isNotFullyCollapsed = isLeftCollapsed && sizes[0] > 0
-      const newSizes: [number, number] = isNotFullyCollapsed ? [30, 70] : [0, 100]
+  useEffect(() => void (project && dispatch(listFolder(project))), [project])
+  useEffect(() => void i18n.changeLanguage(language), [language])
+  useEffect(() => {
+    if (!isSideBarAvailable) {
+      setIsLeftCollapsed(true)
+      setIsRightCollapsed(false)
+      return
+    }
 
-      setSizes(newSizes)
-    },
-    [isLeftCollapsed, sizes[0]]
-  )
+    const isSideBarCollapsed = sideBarWidth < 2
+    const isWorkspaceCollapsed = sideBarWidth > 98
+
+    setIsLeftCollapsed(isSideBarCollapsed)
+    setIsRightCollapsed(isWorkspaceCollapsed)
+  }, [isSideBarAvailable])
 
   useEffect(() => {
     dispatch(getUserSettings())
     dispatch(getLocalSettings())
   }, [])
 
-  useEffect(() => {
-    if (!personalProjectDirectory) return
-
-    dispatch(listFolder(personalProjectDirectory))
-  }, [personalProjectDirectory])
-
   const handleDragEnd = (sectionSizes: [number, number]) => {
     setSizes(sectionSizes)
+    dispatch(setSideBarWidth(sectionSizes[0]))
   }
 
   const handleDrag = (sectionSizes: [number, number]) => {
@@ -81,25 +101,34 @@ export default function App() {
     <div className="flex flex-col min-h-screen text-neutral-800 dark:text-neutral-200 bg-neutral-100 dark:bg-neutral-800 app">
       <div className="flex grow">
         <ActivityBar />
-        <SplitView
-          className="fixed top-0 left-10 right-0 bottom-0 flex grow"
-          sizes={sizes}
-          snapOffset={SPLIT_SNAP_OFFSET}
-          minSize={SPLIT_MIN_SIZE}
-          onDrag={handleDrag}
-          onDragEnd={handleDragEnd}
-        >
-          <div
-            className={`overflow-y-scroll h-full bg-neutral-200 dark:bg-neutral-900 ${
-              isLeftCollapsed && "hidden"
-            }`}
+        {isSideBarAvailable ? (
+          <SplitView
+            className="fixed top-0 left-10 right-0 bottom-0 flex grow"
+            sizes={sizes}
+            snapOffset={SPLIT_SNAP_OFFSET}
+            minSize={SPLIT_MIN_SIZE}
+            onDrag={handleDrag}
+            onDragEnd={handleDragEnd}
           >
-            <SideBar />
+            <div
+              className={`overflow-y-scroll h-full bg-neutral-200 dark:bg-neutral-900 ${
+                isLeftCollapsed && "hidden"
+              }`}
+            >
+              <SideBar />
+            </div>
+            <div className={`overflow-y-scroll h-full ${isRightCollapsed && "hidden"}`}>
+              <Workspace />
+            </div>
+          </SplitView>
+        ) : (
+          <div className="fixed top-0 left-10 right-0 bottom-0 flex grow">
+            <div className="h-full w-[10.5px] bg-neutral-200 dark:bg-neutral-900"></div>
+            <div className={`overflow-y-scroll h-full ${isRightCollapsed && "hidden"}`}>
+              <Workspace />
+            </div>
           </div>
-          <div className={`overflow-y-scroll h-full ${isRightCollapsed && "hidden"}`}>
-            <Workspace />
-          </div>
-        </SplitView>
+        )}
       </div>
     </div>
   )

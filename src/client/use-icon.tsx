@@ -32,7 +32,7 @@ const isIconAvailable = (name?: IconName) => Boolean(name && ALL_ICONS[name])
  * or the name is not provided, returns a NoOp. Results are cached per icon name.
  * // TODO: Avoid importing redundant icons on the web
  */
-export const useIcon = (name?: IconName, className?: string): IconType => {
+export const useIcon = (name?: IconName): IconType => {
   const Icon = useMemo(() => {
     const iconThunk = Switch.of(name)
       .case(isIconAvailable, () => ALL_ICONS[name as string])
@@ -41,5 +41,5 @@ export const useIcon = (name?: IconName, className?: string): IconType => {
     return iconThunk()
   }, [name])
 
-  return () => <Icon className={`shrink-0 ${className}`} />
+  return Icon
 }

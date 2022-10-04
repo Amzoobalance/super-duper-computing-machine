@@ -1,5 +1,6 @@
+import { disableSideBar } from "@client/app/store"
 import Null from "@client/null"
-import { useAppSelector } from "@client/state"
+import { useAppDispatch, useAppSelector } from "@client/state"
 import { isFolder } from "@core/app/is-folder"
 import { OrdoFolder } from "@core/app/types"
 import { Checkbox } from "@core/editor/types"
@@ -22,9 +23,12 @@ const collectCheckboxes = (tree: OrdoFolder, checkboxes: Record<string, Checkbox
 }
 
 export default function Checkboxes() {
+  const dispatch = useAppDispatch()
   const tree = useAppSelector((state) => state.app.personalDirectory)
 
   const [checkboxes, setCheckboxes] = useState<Record<string, Checkbox[]>>({})
+
+  useEffect(() => void dispatch(disableSideBar()), [])
 
   useEffect(() => {
     if (!tree) return
@@ -33,7 +37,7 @@ export default function Checkboxes() {
   }, [tree?.path])
 
   return Either.fromBoolean(Object.keys(checkboxes).length > 0).fold(Null, () => (
-    <div className="columns-2 gap-2">
+    <div className="columns-1 md:columns-2 lg:columns-3 gap-2">
       {Object.keys(checkboxes).map((readableName) => (
         <div
           className={`bg-gradient-to-br p-4 shadow-lg break-inside-avoid-column rounded-md mb-2 from-neutral-200 to-stone-200 dark:from-neutral-700 dark:to-stone-700`}
@@ -44,7 +48,7 @@ export default function Checkboxes() {
             {checkboxes[readableName].map((checkbox, index) => (
               <label className="flex space-x-2 items-center" key={index}>
                 <input
-                  className="w-10 h-10 md:w-5 md:h-5 accent-emerald-600 shrink-0"
+                  className="w-8 h-8 md:w-5 md:h-5 accent-emerald-600 shrink-0"
                   type="checkbox"
                   checked={checkbox.checked}
                   onChange={console.log}

@@ -10,7 +10,9 @@ export type AppState = {
   personalDirectory: Nullable<OrdoFolder>
   currentFileRaw: string
   currentFile: Nullable<OrdoFile>
+  sideBarWidth: number
   isSavingFile: boolean
+  isSideBarAvailable: boolean
 }
 
 const initialState: AppState = {
@@ -19,7 +21,9 @@ const initialState: AppState = {
   personalDirectory: null,
   currentFileRaw: "",
   currentFile: null,
+  sideBarWidth: 30,
   isSavingFile: false,
+  isSideBarAvailable: false,
 }
 
 export const getUserSettings = createAsyncThunk("@app/getUserSettings", async () =>
@@ -89,8 +93,27 @@ export const appSlice = createSlice({
 
       window.ordo.emit(action)
     },
-    updateFile: (state: AppState, action: PayloadAction<string>) => {
-      state.currentFileRaw = action.payload
+    setSideBarWidth: (state: AppState, action: PayloadAction<number>) => {
+      if (action.payload < 1) {
+        state.sideBarWidth = 0
+        return
+      }
+
+      state.sideBarWidth = action.payload
+    },
+    toggleSideBar: (state: AppState) => {
+      if (state.sideBarWidth > 0) {
+        state.sideBarWidth = 0
+        return
+      }
+
+      state.sideBarWidth = 30
+    },
+    enableSideBar: (state: AppState) => {
+      state.isSideBarAvailable = true
+    },
+    disableSideBar: (state: AppState) => {
+      state.isSideBarAvailable = false
     },
   },
   extraReducers: (builder) => {
@@ -132,6 +155,13 @@ export const appSlice = createSlice({
   },
 })
 
-export const { setUserSetting, setLocalSetting } = appSlice.actions
+export const {
+  setUserSetting,
+  setLocalSetting,
+  setSideBarWidth,
+  toggleSideBar,
+  enableSideBar,
+  disableSideBar,
+} = appSlice.actions
 
 export default appSlice.reducer
