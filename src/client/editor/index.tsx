@@ -42,7 +42,7 @@ export default function Editor() {
 
   const currentFileRaw = useAppSelector((state) => state.app.currentFileRaw)
   const currentFile = useAppSelector((state) => state.app.currentFile)
-  const isSavingFile = useAppSelector((state) => state.app.isSavingFile)
+  const isSavingFile = useAppSelector((state) => state.app.isLoading)
 
   const SpinIcon = useIcon("HiOutlineRefresh")
 

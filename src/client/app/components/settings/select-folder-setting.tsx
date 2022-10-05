@@ -27,7 +27,7 @@ export default function SelectFolderSetting({
   }
 
   return (
-    <div className="flex space-x-4 items-end">
+    <div className="flex space-x-4 items-center">
       <div className="text-sm break-all">{value}</div>
       <button
         title={t("project.personal.select-directory")}

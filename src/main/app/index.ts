@@ -10,14 +10,11 @@ import { handleOpenFile } from "@main/app/handlers/open-file"
 import { handleDelete } from "@main/app/handlers/delete"
 import { handleRename } from "@main/app/handlers/rename"
 import { handleSaveFile } from "@main/app/handlers/save-file"
-import { debouncePromise } from "@core/utils/debounce"
-
-const debounceSave = debouncePromise(handleSaveFile, 1000)
 
 export default registerMainHandlers({
   "@app/rename": handleRename,
   "@app/delete": handleDelete,
-  "@app/saveFile": debounceSave,
+  "@app/saveFile": handleSaveFile,
   "@app/openFile": handleOpenFile,
   "@app/listFolder": handleListFolder,
   "@app/createFile": handleCreateFile,

@@ -19,6 +19,6 @@ export const FileAssociations: Record<string, string[]> = {
     ".tiff",
   ],
   ordo: [ORDO_FILE_EXTENSION],
-  markdown: [".md"],
+  markdown: [".md", ".mdx"],
   // pdf: [".pdf"],
 }

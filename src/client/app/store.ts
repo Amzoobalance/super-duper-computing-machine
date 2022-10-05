@@ -1,6 +1,7 @@
 import type { Nullable } from "@core/types"
 import type { LocalSettings, OrdoFile, OrdoFolder, UserSettings } from "@core/app/types"
 import type { RootNode } from "@core/editor/types"
+import debounce from "lodash/debounce"
 
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit"
 
@@ -11,7 +12,7 @@ export type AppState = {
   currentFileRaw: string
   currentFile: Nullable<OrdoFile>
   sideBarWidth: number
-  isSavingFile: boolean
+  isLoading: boolean
   isSideBarAvailable: boolean
 }
 
@@ -22,7 +23,7 @@ const initialState: AppState = {
   currentFileRaw: "",
   currentFile: null,
   sideBarWidth: 30,
-  isSavingFile: false,
+  isLoading: false,
   isSideBarAvailable: false,
 }
 
@@ -39,6 +40,7 @@ export const selectPersonalProjectDirectory = createAsyncThunk(
   () => window.ordo.emit<string>({ type: "@app/selectPersonalProjectDirectory" })
 )
 
+// TODO: Make path parameter optional
 export const listFolder = createAsyncThunk("@app/listFolder", (payload: string) =>
   window.ordo.emit<OrdoFolder, string>({ type: "@app/listFolder", payload })
 )
@@ -67,9 +69,20 @@ export const renameFileOrFolder = createAsyncThunk("@app/rename", (payload: TRen
 
 type TSaveFileParams = RootNode["data"] & { path: string }
 
-export const saveFile = createAsyncThunk("@app/saveFile", (payload: TSaveFileParams) =>
-  window.ordo.emit<OrdoFolder, TSaveFileParams>({ type: "@app/saveFile", payload })
-)
+const saveFileHandler = async (payload: TSaveFileParams, { dispatch, state }: any) => {
+  dispatch(setIsLoading(true))
+
+  await window.ordo.emit<OrdoFolder, TSaveFileParams>({
+    type: "@app/saveFile",
+    payload,
+  })
+
+  dispatch(setIsLoading(false))
+}
+
+const debounceSaveFileHandler = debounce(saveFileHandler, 2000, { trailing: true, leading: false })
+
+export const saveFile = createAsyncThunk("@app/saveFile", debounceSaveFileHandler)
 
 export const appSlice = createSlice({
   name: "@app",
@@ -115,6 +128,9 @@ export const appSlice = createSlice({
     disableSideBar: (state: AppState) => {
       state.isSideBarAvailable = false
     },
+    setIsLoading: (state: AppState, action: PayloadAction<boolean>) => {
+      state.isLoading = action.payload
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -147,10 +163,10 @@ export const appSlice = createSlice({
         state.personalDirectory = action.payload
       })
       .addCase(saveFile.pending, (state) => {
-        state.isSavingFile = true
+        state.isLoading = true
       })
       .addCase(saveFile.fulfilled, (state, action) => {
-        state.isSavingFile = false
+        // TODO: Remove this as it doesn't really work
         if (action.payload) state.personalDirectory = action.payload
       })
   },
@@ -163,6 +179,7 @@ export const {
   toggleSideBar,
   enableSideBar,
   disableSideBar,
+  setIsLoading,
 } = appSlice.actions
 
 export default appSlice.reducer
