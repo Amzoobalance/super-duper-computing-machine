@@ -5,7 +5,7 @@ import React from "react"
 import { setUserSetting } from "@client/app/store"
 import { useAppDispatch } from "@client/state"
 
-// TODO: Find a better way for SettingsItemProps that does not involve Settings property keys
+// TODO: 67
 /**
  * Input for settings with boolean values.
  */

@@ -45,7 +45,7 @@ export type UserSettings = {
   "appearance.theme": Theme
   "appearance.language": Language
   "project.personal.directory": string
-  // TODO: Move to appropriate extensions
+  // TODO: 74
   // "graph.show-folders": boolean
   // "graph.show-links": boolean
   // "graph.show-tags": boolean

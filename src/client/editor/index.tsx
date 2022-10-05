@@ -101,7 +101,6 @@ export default function Editor() {
       .fold(noOp, ({ ranges, raw }) => {
         setRaw(raw)
         setCaretRanges(ranges)
-        // TODO: Debounce saving
         if (!parsedFile || !currentFile) return
 
         dispatch(
@@ -124,7 +123,6 @@ export default function Editor() {
       .fold(noOp, ({ ranges, raw }) => {
         setRaw(raw)
         setCaretRanges(ranges)
-        // TODO: Debounce saving
         if (!parsedFile || !currentFile) return
 
         dispatch(
@@ -147,7 +145,6 @@ export default function Editor() {
       .fold(noOp, ({ ranges, raw }) => {
         setRaw(raw)
         setCaretRanges(ranges)
-        // TODO: Debounce saving
         if (!parsedFile || !currentFile) return
 
         dispatch(
@@ -175,7 +172,6 @@ export default function Editor() {
       .fold(noOp, ({ ranges, raw }) => {
         setRaw(raw)
         setCaretRanges(ranges)
-        // TODO: Debounce saving
         if (!parsedFile || !currentFile) return
 
         dispatch(
@@ -190,16 +186,14 @@ export default function Editor() {
         )
       })
 
-  // TODO: shiftArrows, ctrlArrows, ctrlBackspace, ctrlDelete
-  // TODO: ctrl+click for adding a caret at click point
-  // TODO: shift+click for mouse selection from range to click point
-  // TODO: mousedown+mouseup for mouse selection from mousedown point to mouseup point
-  // TODO: ctrl+a to select everything
-  // TODO: ctrl+x, ctrl+c, ctrl+v
-  // TODO: ctrl+z, ctrl+shift+z
-  // BUG: When typing very quickly (basically, rolling over the keyboard) some characters are lost
-  // but the caret position is updated properly. This leads to losing caret visually. Maybe debouncing
-  // `onChar` would help?
+  // TODO: 100
+  // TODO: 101
+  // TODO: 102
+  // TODO: 103
+  // TODO: 104
+  // TODO: 105
+  // TODO: 106
+  // BUG: 107
   useHotkeys(
     "*",
     (event) => {

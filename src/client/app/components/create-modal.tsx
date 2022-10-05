@@ -51,7 +51,7 @@ type TProps = {
 }
 
 const CreateModal = ({ hideModal, type, parent }: TProps) => {
-  // TODO: A button to switch between creating a file or a folder
+  // TODO: 58
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
   const separator = useAppSelector((state) => state.app.localSettings["app.separator"])

@@ -21,9 +21,9 @@ export const handleArrowUp = (caretRanges: CaretRange[]) => (root: RootNode) => 
       range.start.column = lastColumn
     }
 
-    // TODO: Add support for shift
+    // TODO: 85
 
-    // TODO: Do something here. This might happen if there is a dead caret in the document
+    // TODO: 86. This might happen if there is a dead caret in the document
     // const relatedLine = root.children.find((node) => node.position.start.line === range.start.line)
     // if (!relatedLine) return
     // const relatedTextNode = relatedLine?.children.find(
@@ -33,7 +33,7 @@ export const handleArrowUp = (caretRanges: CaretRange[]) => (root: RootNode) => 
     //     node.position.end.column <= range.start.column
     // )
     // if (relatedLine.position.end)
-    // TODO: Add support for shift
+    // TODO: 85
   })
 
   return ranges
@@ -64,7 +64,7 @@ export const handleArrowDown = (caretRanges: CaretRange[]) => (root: RootNode) =
 
     range.start.column = lastColumn
 
-    // TODO: Add support for shift
+    // TODO: 85
   })
 
   return ranges
@@ -93,7 +93,7 @@ export const handleArrowLeft = (caretRanges: CaretRange[]) => (root: RootNode) =
 
     range.start.column -= 1
 
-    // TODO: Add support for shift
+    // TODO: 85
   })
 
   return ranges
@@ -120,7 +120,7 @@ export const handleArrowRight = (caretRanges: CaretRange[]) => (root: RootNode) 
 
     range.start.column += 1
 
-    // TODO: Add support for shift
+    // TODO: 85
   })
 
   return ranges

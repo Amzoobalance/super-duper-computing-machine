@@ -16,7 +16,7 @@ export const handleListFolder = async (
 ): Promise<OrdoFolder> => {
   // Check if provided path exists
   if (!existsSync(path)) {
-    // TODO: Add error to translations
+    // TODO: 95
     throw new Error("app.error.list-folder.path-does-not-exist")
   }
 
@@ -24,7 +24,7 @@ export const handleListFolder = async (
 
   // Check if provided path is a folder
   if (!stat.isDirectory()) {
-    // TODO: Add error to translations
+    // TODO: 95
     throw new Error("app.error.list-folder.not-a-folder")
   }
 
@@ -49,8 +49,8 @@ export const handleListFolder = async (
   for (const item of folder) {
     const itemPath = join(path, item.name)
 
-    // TODO: Add inclusion patterns
-    // TODO: Add encryption for meta and files with a dedicated password
+    // TODO: 96
+    // TODO: 97
 
     if (item.isDirectory()) {
       ordoFolder.children.push(await handleListFolder(itemPath, depth + 1, rootPath))

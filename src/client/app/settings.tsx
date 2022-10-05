@@ -17,7 +17,7 @@ export default function Settings() {
 
   useEffect(() => void dispatch(disableSideBar()), [])
 
-  // TODO: Disallow opening sidebar
+  // TODO: 52
   const schemaKeys = Object.keys(USER_SETTINGS_SCHEMA) as (keyof typeof USER_SETTINGS_SCHEMA)[]
 
   return Either.fromNullable(userSettings).fold(Null, (settings) => (

@@ -6,8 +6,8 @@ import Menu from "@client/context-menu/components/menu"
 
 export const useContextMenu = (structure: TMenu) => {
   const [isShown, setIsShown] = useState(false)
-  // TODO: Check if the menu may render outside the viewport. If it does, stick to X and Y with another corner.
-  // TODO: Add support for submenus
+  // TODO: 68
+  // TODO: 69
   const [x, setX] = useState(0)
   const [y, setY] = useState(0)
 

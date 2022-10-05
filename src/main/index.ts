@@ -10,8 +10,8 @@ import LocalSettingsStore from "@main/app/local-settings-store"
 import createAppApi from "@main/app"
 import userSettingsStore from "./app/user-settings-store"
 
-// TODO: Add a way to conveniently import main handlers
-// TODO: It looks like an extension needs a way to export translations, main handlers, components (add more later on)
+// TODO: 87
+// TODO: 88
 
 const unregisterAppApi = createAppApi(ipcMain)
 
@@ -79,7 +79,7 @@ const createWindow = async () => {
   nativeTheme.themeSource = userSettingsStore.get("appearance.theme")
 
   const documentsPath = app.getPath("documents")
-  // TODO: Use this by default if other project folder was not selected by the user!
+  // TODO: 89
   const ordoPath = join(documentsPath, "Ordo")
 
   Menu.setApplicationMenu(Menu.buildFromTemplate([]))

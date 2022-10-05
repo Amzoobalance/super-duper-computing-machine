@@ -22,8 +22,8 @@ const createExtractor = () => (tree: RootNode) => {
   const linkRx = /\(\(([\p{L}\d/-]+)\)\)/giu
   const dateRx = /!?!\(\d{4}-\d{2}-\d{2}\)/g
   const dateWithPatternRx = /(!?!\(\d{4}-\d{2}-\d{2}\+[0-9*]{5}\))/g
-  // TODO: dateWithPatternAndEndDateRx
-  // TODO: mentionRx
+  // TODO: 75
+  // TODO: 76
 
   for (let i = 0; i < tree.children.length; i++) {
     for (let ci = 0; ci < tree.children[i].children.length; ci++) {
@@ -109,19 +109,19 @@ const createExtractor = () => (tree: RootNode) => {
   }
 }
 
-// TODO Extract links (they are wrapped with (()))
+// TODO 77
 // @example ((folder/another-file.mdo)), ((photos/2022/img.png))
-// TODO Extract embeds (they are wrapped with !(()))
+// TODO 78
 // @example !((folder/another-file.mdo))
 
-// TODO Extract dates (they look like !ISO_date--cron_pattern?--ISO_end_date or !(ISO_date_reminder--cron_pattern?--ISO_end_date))
+// TODO 79
 // @example !2022-09-25, !2022-09-25T09:03:47.133Z
 // @example !2022-09-25--00***--2022-10-25 - Appear daily at midnight since Sep 25, 2022 till Oct 25, 2022
 // @example !(2022-09-25T09:00:00.133Z--****7--2022-12-31) - Remind every Sunday at 9am since Sep 25, 2022 till Dec 31, 2022
-// TODO There are also critical dates (they they look like !!(ISO_additional_date) or !!(ISO_date_reminder)
-// TODO They are used to highlight the main date in the file that should be shown in cases when only one date can be shown
-// TODO f(for example, on Kanban board cards)
+// TODO 80
+// TODO 81
+// TODO 82
 // @example !!2022-09-25--00***--2022-10-25 - Appear daily at midnight since Sep 25, 2022 till Oct 25, 2022
 
-// TODO: "+++++ h1", "++++ h2", "+++ h3", "++ h4", "+ h5", "**strong**", "_em_", "`code`", "~~s~~", "---", ":emoji:", "text1 // text2" (<details><summary>{text1}</summary><div>{text2}</div><details />)
-// TODO: MAYBE: wrap content in braces that shows on hover? This option can be disabled in options
+// TODO: 83
+// TODO: 84

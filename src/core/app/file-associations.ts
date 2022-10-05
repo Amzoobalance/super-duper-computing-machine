@@ -1,6 +1,6 @@
 import { ORDO_FILE_EXTENSION } from "@core/app/constants"
 
-// TODO: Add a way to register new file associations
+// TODO: 73
 export const FileAssociations: Record<string, string[]> = {
   image: [
     ".apng",

@@ -10,6 +10,6 @@ export const getFileParser = (file: OrdoFile): ((raw: string) => RootNode) => {
 
   return Switch.of(type)
     .case("ordo", parseOrdoFile)
-    .case("image", parseTextFile) // TODO: Add handling images
+    .case("image", parseTextFile) // TODO: 72
     .default(parseTextFile)
 }

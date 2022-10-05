@@ -34,9 +34,9 @@ export const handleCreateFile = async (path: string) => {
   const filePath = hasValidExtension ? path : path + ORDO_FILE_EXTENSION
   const writeFile = () => promises.writeFile(filePath, "\n", "utf8")
 
-  // TODO: Open file after creation
+  // TODO: 90
 
-  // TODO: Add encryption option and encryption support
+  // TODO: 91
   if (filePath.endsWith(ORDO_FILE_EXTENSION)) {
     const metadataPath = filePath + ORDO_METADATA_EXTENSION
 
